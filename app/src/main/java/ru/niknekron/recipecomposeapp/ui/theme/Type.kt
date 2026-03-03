@@ -22,17 +22,17 @@ val recipesAppTypography = Typography(
     //Основной текст
     bodyMedium = TextStyle(
         fontFamily = montserratFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+        lineHeight = 16.sp,
         letterSpacing = 0.5.sp,
     ),
     //Заголовок экрана
     displayLarge = TextStyle(
         fontFamily = montserratAlternatesFontFamily,
-        fontWeight = FontWeight.Bold,
-        fontSize = 34.sp,
-        lineHeight = 40.sp,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 20.sp,
+        lineHeight = 24.sp,
     ),
     /* Other default text styles to override
     titleLarge = TextStyle(
