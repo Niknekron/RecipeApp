@@ -11,16 +11,48 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+private val RecipesAppDarkColorScheme= darkColorScheme(
+    primary = PrimaryColorDark,
+    onPrimary = TextPrimaryColorDark,
+
+    secondary = AccentBlueDark,
+    onSecondary = SurfaceColorDark,
+
+    tertiary =  AccentColorDark,
+    onTertiary = SurfaceColorDark,
+
+    background = BackgroundColorDark,
+    onBackground = TextPrimaryColorDark,
+
+    surface = SurfaceColorDark,
+    onSurfaceVariant = TextSecondaryColorDark,
+
+    error = AccentColorDark,
+    onError = TextPrimaryColorDark,
+
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+private val RecipesAppLightColorScheme = lightColorScheme(
+    primary = PrimaryColor,
+    onPrimary = SurfaceColor,
+
+    secondary = TextSecondaryColor,
+    onSecondary = SurfaceColor,
+
+    tertiary = AccentColor,
+    onTertiary = SurfaceColor,
+
+    background = BackgroundColor,
+    onBackground = TextPrimaryColor,
+
+    surface = SurfaceColor,
+    onSurface = TextPrimaryColor,
+
+    surfaceVariant = DividerColor,
+    onSurfaceVariant = TextSecondaryColor,
+
+    error = AccentColor,
+    onError = SurfaceColor,
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -35,19 +67,12 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun RecipeComposeAppTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    val colorScheme = if(isSystemInDarkTheme()) {
+        RecipesAppDarkColorScheme
+    } else {
+        RecipesAppLightColorScheme
     }
 
     MaterialTheme(
