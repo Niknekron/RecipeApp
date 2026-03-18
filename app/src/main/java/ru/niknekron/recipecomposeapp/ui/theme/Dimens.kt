@@ -16,6 +16,7 @@ object Dimens {
     val CornerMedium = 12.dp
     val CornerLarge = 16.dp
     val CornerExtraLarge = 24.dp
+    val HeaderHeight = 220.dp
 
     //Высоты элементов
     val ButtonHeight = 48.dp
