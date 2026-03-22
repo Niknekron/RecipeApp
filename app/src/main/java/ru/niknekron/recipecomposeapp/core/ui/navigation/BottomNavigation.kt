@@ -3,6 +3,7 @@ package ru.niknekron.recipecomposeapp.core.ui.navigation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -20,6 +21,7 @@ fun BottomNavigation(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .navigationBarsPadding()
             .padding(horizontal = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
