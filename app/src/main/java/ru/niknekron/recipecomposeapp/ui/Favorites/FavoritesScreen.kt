@@ -1,4 +1,4 @@
-package ru.niknekron.recipecomposeapp.ui.categories
+package ru.niknekron.recipecomposeapp.ui.Favorites
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,22 +16,21 @@ import ru.niknekron.recipecomposeapp.ui.theme.Dimens
 import ru.niknekron.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
 @Composable
-fun CategoriesScreen(
+fun FavoritesScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
-       modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top
     ) {
         ScreenHeader(
-            painter = painterResource(id = R.drawable.categories_image),
-            contentDescription = "Categories header image",
-            text = "Categories"
+            painter = painterResource(id = R.drawable.bcg_favorites),
+            contentDescription = "Favorites header image",
+            text = "Favorites",
         )
 
-
         Text(
-            text = "A list of categories will appear here soon.",
+            text = "A list of featured recipes will appear here soon.",
             modifier = Modifier.padding(Dimens.PaddingMedium),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onBackground
@@ -41,8 +40,8 @@ fun CategoriesScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun CategoriesScreenPreview() {
+fun FavoritesScreenPreview() {
     RecipeComposeAppTheme {
-        CategoriesScreen()
+        FavoritesScreen()
     }
 }
