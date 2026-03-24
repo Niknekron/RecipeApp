@@ -1,4 +1,4 @@
-package ru.niknekron.recipecomposeapp.ui.components
+package ru.niknekron.recipecomposeapp.core.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

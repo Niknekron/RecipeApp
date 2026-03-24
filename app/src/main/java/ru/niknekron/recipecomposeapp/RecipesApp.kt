@@ -4,17 +4,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import ru.niknekron.recipecomposeapp.core.ui.navigation.BottomNavigation
 import ru.niknekron.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import ru.niknekron.recipecomposeapp.ui.Favorites.FavoritesScreen
+import ru.niknekron.recipecomposeapp.ui.categories.CategoriesScreen
+import ru.niknekron.recipecomposeapp.ui.recipes.RecipeScreen
 
 
 @Composable
@@ -37,25 +38,21 @@ fun RecipesApp() {
         ) { innerPadding ->
             when (currentScreen) {
                 ScreenId.CATEGORIES -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Categories screen")
-                    }
+                    CategoriesScreen(
+                        modifier = Modifier.padding(innerPadding)
+                    )
                 }
 
                 ScreenId.FAVORITES -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Favorites screen")
-                    }
+                    FavoritesScreen(
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                }
+
+                ScreenId.RECIPES -> {
+                    RecipeScreen(
+                        modifier = Modifier.padding(innerPadding)
+                    )
                 }
             }
         }

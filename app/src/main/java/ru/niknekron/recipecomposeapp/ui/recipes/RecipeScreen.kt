@@ -1,4 +1,4 @@
-package ru.niknekron.recipecomposeapp.ui.categories
+package ru.niknekron.recipecomposeapp.ui.recipes
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,27 +11,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import ru.niknekron.recipecomposeapp.R
+import ru.niknekron.recipecomposeapp.RecipesApp
 import ru.niknekron.recipecomposeapp.core.ui.ScreenHeader
 import ru.niknekron.recipecomposeapp.ui.theme.Dimens
 import ru.niknekron.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
 @Composable
-fun CategoriesScreen(
+fun RecipeScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
-       modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top
     ) {
         ScreenHeader(
             painter = painterResource(id = R.drawable.categories_image),
-            contentDescription = "Categories header image",
-            text = "Categories"
+            contentDescription = "Recipes header image",
+            text = "Recipes"
         )
 
-
         Text(
-            text = "A list of categories will appear here soon.",
+            text = "There will be a list of recipes here soon.",
             modifier = Modifier.padding(Dimens.PaddingMedium),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onBackground
@@ -41,8 +41,8 @@ fun CategoriesScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun CategoriesScreenPreview() {
+fun RecipesScreenPreview() {
     RecipeComposeAppTheme {
-        CategoriesScreen()
+        RecipesApp()
     }
 }
