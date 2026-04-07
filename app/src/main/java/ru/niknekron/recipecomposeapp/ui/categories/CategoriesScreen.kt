@@ -2,6 +2,7 @@ package ru.niknekron.recipecomposeapp.ui.categories
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -38,10 +39,14 @@ fun CategoriesScreen(
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(Dimens.PaddingMedium),
             horizontalArrangement = Arrangement.spacedBy(Dimens.PaddingMedium),
             verticalArrangement =  Arrangement.spacedBy(Dimens.PaddingMedium),
         ) {
-            items(categories) { category ->
+            items(
+                items = categories,
+                key = { it.id }
+            ) { category ->
                 CategoryItem(
                     category = category,
                     onClick = { onCategoryClick(category.id)}

@@ -37,7 +37,7 @@ fun CategoryItem(
             containerColor = MaterialTheme.colorScheme.surface
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp
+            defaultElevation = Dimens.ElevationMedium
         )
     ) {
         Column(
@@ -60,7 +60,7 @@ fun CategoryItem(
                         verticalArrangement = Arrangement.Center
                     ) {
                         CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(Dimens. IndicatorSize)
                         )
                     }
                 },
