@@ -10,6 +10,7 @@ object Dimens {
     val PaddingMedium = 16.dp
     val PaddingLarge = 24.dp
     val PaddingExtraLarge = 32.dp
+    val IndicatorSize = 24.dp
 
     //Скругление
     val CornerSmall = 8.dp
