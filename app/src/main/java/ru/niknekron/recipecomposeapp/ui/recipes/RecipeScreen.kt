@@ -2,47 +2,56 @@ package ru.niknekron.recipecomposeapp.ui.recipes
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import ru.niknekron.recipecomposeapp.R
-import ru.niknekron.recipecomposeapp.RecipesApp
 import ru.niknekron.recipecomposeapp.core.ui.ScreenHeader
+import ru.niknekron.recipecomposeapp.data.repository.getRecipesByCategoryId
+import ru.niknekron.recipecomposeapp.ui.recipes.model.toUiModel
+import ru.niknekron.recipecomposeapp.ui.recipes.model.RecipeUiModel
 import ru.niknekron.recipecomposeapp.ui.theme.Dimens
-import ru.niknekron.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
 @Composable
-fun RecipeScreen(
-    modifier: Modifier = Modifier
+fun RecipesScreen(
+    categoryId: Int,
+    categoryTitle: String,
+    onRecipeClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
+    var recipes by remember { mutableStateOf<List<RecipeUiModel>>(emptyList()) }
+
+    LaunchedEffect(categoryId) {
+        recipes = getRecipesByCategoryId(categoryId).map { it.toUiModel() }
+    }
+
     Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Top
+        modifier = modifier.fillMaxSize()
     ) {
         ScreenHeader(
             painter = painterResource(id = R.drawable.categories_image),
             contentDescription = "Recipes header image",
-            text = "Recipes"
+            text = categoryTitle
         )
 
-        Text(
-            text = "There will be a list of recipes here soon.",
-            modifier = Modifier.padding(Dimens.PaddingMedium),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RecipesScreenPreview() {
-    RecipeComposeAppTheme {
-        RecipesApp()
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(Dimens.PaddingMedium),
+            verticalArrangement = Arrangement.spacedBy(Dimens.PaddingMedium)
+        ) {
+            items(
+                items = recipes,
+                key = { it.id }
+            ) { recipe ->
+                RecipeItem(
+                    recipe = recipe,
+                    onClick = onRecipeClick
+                )
+            }
+        }
     }
 }
