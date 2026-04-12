@@ -1,26 +1,23 @@
 package ru.niknekron.recipecomposeapp
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import ru.niknekron.recipecomposeapp.core.ui.navigation.BottomNavigation
-import ru.niknekron.recipecomposeapp.ui.theme.RecipeComposeAppTheme
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import ru.niknekron.recipecomposeapp.ui.Favorites.FavoritesScreen
 import ru.niknekron.recipecomposeapp.ui.categories.CategoriesScreen
-import ru.niknekron.recipecomposeapp.ui.recipes.RecipeScreen
+import ru.niknekron.recipecomposeapp.ui.favorites.FavoritesScreen
+import ru.niknekron.recipecomposeapp.ui.recipes.RecipesScreen
+import ru.niknekron.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
 
 @Composable
 fun RecipesApp() {
     var currentScreen by remember { mutableStateOf(ScreenId.CATEGORIES) }
+    var selectedCategoryId by remember { mutableStateOf(0) }
+    var selectedCategoryTitle by remember { mutableStateOf("Burgers") }
 
     RecipeComposeAppTheme {
         Scaffold(
@@ -39,7 +36,21 @@ fun RecipesApp() {
             when (currentScreen) {
                 ScreenId.CATEGORIES -> {
                     CategoriesScreen(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        onCategoryClick = {categoryId ->
+                            selectedCategoryId = categoryId
+
+                            selectedCategoryTitle = when (categoryId) {
+                                0 -> "Бургеры"
+                                1 -> "Десерты"
+                                2 -> "Пицца"
+                                3 -> "Рыба"
+                                4 -> "Супы"
+                                5 -> "Салаты"
+                                else -> "Рецепты"
+                            }
+                            currentScreen = ScreenId.RECIPES
+                        }
                     )
                 }
 
@@ -50,7 +61,12 @@ fun RecipesApp() {
                 }
 
                 ScreenId.RECIPES -> {
-                    RecipeScreen(
+                    RecipesScreen(
+                        categoryId = selectedCategoryId,
+                        categoryTitle = selectedCategoryTitle,
+                        onRecipeClick = {recipeId ->
+                            //
+                        },
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
