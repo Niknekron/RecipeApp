@@ -1,4 +1,4 @@
-package ru.niknekron.recipecomposeapp.ui.Favorites
+package ru.niknekron.recipecomposeapp.ui.favorites
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,20 +17,20 @@ import ru.niknekron.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
 @Composable
 fun FavoritesScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top
     ) {
         ScreenHeader(
             painter = painterResource(id = R.drawable.bcg_favorites),
             contentDescription = "Favorites header image",
-            text = "Favorites",
+            text = "Избранное"
         )
 
         Text(
-            text = "A list of featured recipes will appear here soon.",
+            text = "Здесь скоро появится список избранных рецептов",
             modifier = Modifier.padding(Dimens.PaddingMedium),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onBackground

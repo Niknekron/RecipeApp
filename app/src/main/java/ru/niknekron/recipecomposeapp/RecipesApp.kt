@@ -12,12 +12,11 @@ import ru.niknekron.recipecomposeapp.ui.favorites.FavoritesScreen
 import ru.niknekron.recipecomposeapp.ui.recipes.RecipesScreen
 import ru.niknekron.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 
-
 @Composable
 fun RecipesApp() {
     var currentScreen by remember { mutableStateOf(ScreenId.CATEGORIES) }
-    var selectedCategoryId by remember { mutableStateOf(0) }
-    var selectedCategoryTitle by remember { mutableStateOf("Burgers") }
+    var selectedCategoryId by remember { mutableIntStateOf(0) }
+    var selectedCategoryTitle by remember { mutableStateOf("Бургеры") }
 
     RecipeComposeAppTheme {
         Scaffold(
@@ -37,7 +36,7 @@ fun RecipesApp() {
                 ScreenId.CATEGORIES -> {
                     CategoriesScreen(
                         modifier = Modifier.padding(innerPadding),
-                        onCategoryClick = {categoryId ->
+                        onCategoryClick = { categoryId ->
                             selectedCategoryId = categoryId
 
                             selectedCategoryTitle = when (categoryId) {
@@ -49,6 +48,7 @@ fun RecipesApp() {
                                 5 -> "Салаты"
                                 else -> "Рецепты"
                             }
+
                             currentScreen = ScreenId.RECIPES
                         }
                     )
@@ -64,8 +64,8 @@ fun RecipesApp() {
                     RecipesScreen(
                         categoryId = selectedCategoryId,
                         categoryTitle = selectedCategoryTitle,
-                        onRecipeClick = {recipeId ->
-                            //
+                        onRecipeClick = { recipeId ->
+                            // пока заглушка
                         },
                         modifier = Modifier.padding(innerPadding)
                     )

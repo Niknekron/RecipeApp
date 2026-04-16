@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
+
 import coil3.compose.SubcomposeAsyncImage
 import ru.niknekron.recipecomposeapp.ui.categories.model.CategoryUiModel
 import ru.niknekron.recipecomposeapp.ui.theme.Dimens

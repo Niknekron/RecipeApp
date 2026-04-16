@@ -1,4 +1,4 @@
-package ru.niknekron.recipecomposeapp.ui.categories.model
+package ru.niknekron.recipecomposeapp.ui.recipes.model
 
 import androidx.compose.runtime.Immutable
 import ru.niknekron.recipecomposeapp.ASSETS_URI_PREFIX
