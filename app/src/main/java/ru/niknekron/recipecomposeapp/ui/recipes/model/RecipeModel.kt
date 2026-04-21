@@ -1,18 +1,21 @@
 package ru.niknekron.recipecomposeapp.ui.recipes.model
 
+import android.os.Parcelable
 import androidx.compose.runtime.Immutable
+import kotlinx.parcelize.Parcelize
 import ru.niknekron.recipecomposeapp.ASSETS_URI_PREFIX
 import ru.niknekron.recipecomposeapp.data.model.RecipeDto
 
+@Parcelize
 @Immutable
 data class RecipeUiModel(
     val id: Int,
     val title: String,
     val imageUrl: String,
-    val ingredients: List<String>,
+    val ingredients: List<IngredientUiModel>,
     val method: List<String>,
     val isFavorite: Boolean,
-)
+) : Parcelable
 
 fun RecipeDto.toUiModel(): RecipeUiModel {
     return RecipeUiModel(
@@ -23,14 +26,8 @@ fun RecipeDto.toUiModel(): RecipeUiModel {
         } else {
             ASSETS_URI_PREFIX + imageUrl
         },
-        ingredients = ingredients.map { ingredient ->
-            listOf(
-                ingredient.quantity,
-                ingredient.unitOfMeasure,
-                ingredient.description,
-            ).filter { it.isNotBlank() }.joinToString (" ")
-        },
+        ingredients = ingredients.map { it.toUiModel() },
         method = method,
-        isFavorite = false,
+        isFavorite = false
     )
 }

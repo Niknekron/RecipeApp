@@ -19,6 +19,9 @@ import ru.niknekron.recipecomposeapp.ui.recipes.RecipesScreen
 import ru.niknekron.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
+import ru.niknekron.recipecomposeapp.KEY_RECIPE_OBJECT
+import ru.niknekron.recipecomposeapp.ui.details.RecipeDetailsScreen
+import ru.niknekron.recipecomposeapp.ui.recipes.model.RecipeUiModel
 
 @Composable
 fun RecipesApp() {
@@ -95,14 +98,41 @@ fun RecipesApp() {
                     RecipesScreen(
                         categoryId = categoryId,
                         categoryTitle = categoryTitle,
-                        onRecipeClick = { recipeId ->
+                        onRecipeClick = { recipeId, recipe ->
+                            navController.currentBackStackEntry
+                                ?.savedStateHandle
+                                ?.set(KEY_RECIPE_OBJECT, recipe)
+
+                            navController.navigate(
+                                Destination.RecipeDetails.createRoute(recipeId)
+                            )
                         }
                     )
+                }
+
+                composable(
+                    route = Destination.RecipeDetails.route,
+                    arguments = listOf(
+                        navArgument("recipeId") {
+                            type = NavType.IntType
+                        }
+                    )
+                ) {
+                    val recipe = navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.get<RecipeUiModel>(KEY_RECIPE_OBJECT)
+
+                    if (recipe != null) {
+                        RecipeDetailsScreen(
+                            recipe = recipe
+                        )
+                    }
                 }
             }
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
