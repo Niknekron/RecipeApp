@@ -20,7 +20,7 @@ import ru.niknekron.recipecomposeapp.ui.theme.Dimens
 fun RecipesScreen(
     categoryId: Int,
     categoryTitle: String,
-    onRecipeClick: (Int) -> Unit,
+    onRecipeClick: (Int, RecipeUiModel) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var recipes by remember { mutableStateOf<List<RecipeUiModel>>(emptyList()) }
@@ -49,7 +49,9 @@ fun RecipesScreen(
             ) { recipe ->
                 RecipeItem(
                     recipe = recipe,
-                    onClick = onRecipeClick
+                    onClick = { recipeId ->
+                        onRecipeClick(recipeId, recipe)
+                    }
                 )
             }
         }
