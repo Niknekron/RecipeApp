@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import ru.niknekron.recipecomposeapp.R
 import ru.niknekron.recipecomposeapp.core.ui.ScreenHeader
 import ru.niknekron.recipecomposeapp.data.repository.getCategories
+import ru.niknekron.recipecomposeapp.ui.categories.model.toUiModel
 import ru.niknekron.recipecomposeapp.ui.recipes.model.toUiModel
 import ru.niknekron.recipecomposeapp.ui.theme.Dimens
 import ru.niknekron.recipecomposeapp.ui.theme.RecipeComposeAppTheme
