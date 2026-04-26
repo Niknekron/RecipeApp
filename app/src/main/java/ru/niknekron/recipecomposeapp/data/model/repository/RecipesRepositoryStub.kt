@@ -159,14 +159,14 @@ import ru.niknekron.recipecomposeapp.data.model.RecipeDto
         return categories
     }
 
-    fun getRecipesByCategoryId(categoryId: Int): List<RecipeDto> {
-        return when (categoryId) {
-            0 -> burgerRecipes
-            1 -> dessertRecipes
-            2 -> pizzaRecipes
-            3 -> fishRecipes
-            4 -> soupRecipes
-            5 -> saladRecipes
-            else -> emptyList()
-        }
+fun getRecipesByCategoryId(categoryId: Int): List<RecipeDto> {
+    return when (categoryId) {
+        0 -> burgerRecipes
+        1 -> dessertRecipes
+        2 -> pizzaRecipes
+        3 -> fishRecipes
+        4 -> soupRecipes
+        5 -> saladRecipes
+        else -> emptyList()
     }
+}

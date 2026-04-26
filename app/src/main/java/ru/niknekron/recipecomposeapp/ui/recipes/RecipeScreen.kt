@@ -6,21 +6,26 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import ru.niknekron.recipecomposeapp.R
 import ru.niknekron.recipecomposeapp.core.ui.ScreenHeader
 import ru.niknekron.recipecomposeapp.data.repository.getRecipesByCategoryId
-import ru.niknekron.recipecomposeapp.ui.recipes.model.toUiModel
 import ru.niknekron.recipecomposeapp.ui.recipes.model.RecipeUiModel
+import ru.niknekron.recipecomposeapp.ui.recipes.model.toUiModel
 import ru.niknekron.recipecomposeapp.ui.theme.Dimens
 
 @Composable
 fun RecipesScreen(
     categoryId: Int,
     categoryTitle: String,
-    onRecipeClick: (Int, RecipeUiModel) -> Unit,
+    onRecipeClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var recipes by remember { mutableStateOf<List<RecipeUiModel>>(emptyList()) }
@@ -50,7 +55,7 @@ fun RecipesScreen(
                 RecipeItem(
                     recipe = recipe,
                     onClick = { recipeId ->
-                        onRecipeClick(recipeId, recipe)
+                        onRecipeClick(recipeId)
                     }
                 )
             }
