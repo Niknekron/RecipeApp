@@ -70,7 +70,7 @@ fun RecipeDetailsScreen(
 
         recipe.method.forEachIndexed { index, step ->
             Text(
-                text = step,
+                text = "${index + 1}. $step",
                 modifier = Modifier.padding(
                     start = Dimens.PaddingMedium,
                     end = Dimens.PaddingMedium,

@@ -28,5 +28,11 @@ fun IngredientItem(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
+
+        Text(
+            text = "${ingredient.quantity} ${ingredient.unitOfMeasure}".trim(),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
     }
 }

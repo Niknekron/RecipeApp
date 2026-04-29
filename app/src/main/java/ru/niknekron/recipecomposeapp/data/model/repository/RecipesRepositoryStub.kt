@@ -95,11 +95,11 @@ import ru.niknekron.recipecomposeapp.data.model.RecipeDto
                 )
             ),
             method = listOf(
-                "1. В глубокой миске смешайте говяжий фарш, лук, чеснок, соль и перец. Разделите фарш на 4 равные части и сформируйте котлеты.",
-                "2. Разогрейте сковороду на среднем огне. Обжаривайте котлеты с каждой стороны в течение 4-5 минут или до желаемой степени прожарки.",
-                "3. В то время как котлеты готовятся, подготовьте булочки. Разрежьте их пополам и обжарьте на сковороде до золотистой корочки.",
-                "4. Смазать нижние половинки булочек горчицей и кетчупом, затем положите лист салата, котлету, кольца помидора и закройте верхней половинкой булочки.",
-                "5. Подавайте бургеры горячими с картофельными чипсами или картофельным пюре."
+                "В глубокой миске смешайте говяжий фарш, лук, чеснок, соль и перец. Разделите фарш на 4 равные части и сформируйте котлеты.",
+                "Разогрейте сковороду на среднем огне. Обжаривайте котлеты с каждой стороны в течение 4-5 минут или до желаемой степени прожарки.",
+                "В то время как котлеты готовятся, подготовьте булочки. Разрежьте их пополам и обжарьте на сковороде до золотистой корочки.",
+                "Смазать нижние половинки булочек горчицей и кетчупом, затем положите лист салата, котлету, кольца помидора и закройте верхней половинкой булочки.",
+                "Подавайте бургеры горячими с картофельными чипсами или картофельным пюре."
             ),
             imageUrl = "burger-hamburger.png"
         ),
@@ -139,25 +139,37 @@ import ru.niknekron.recipecomposeapp.data.model.RecipeDto
                 )
             ),
             method = listOf(
-                "1. Обжарьте бекон на сковороде до хрустящей корочки, отложите на бумажное полотенце.",
-                "2. Сформируйте из фарша 4 котлеты, обжарьте с каждой стороны по 4 минуты.",
-                "3. За минуту до готовности положите на каждую котлету по ломтику сыра, чтобы он расплавился.",
-                "4. Соберите бургер: булочка, майонез, котлета с сыром, бекон, помидор, кетчуп.",
-                "5. Подавайте горячими."
+                "Обжарьте бекон на сковороде до хрустящей корочки, отложите на бумажное полотенце.",
+                "Сформируйте из фарша 4 котлеты, обжарьте с каждой стороны по 4 минуты.",
+                "За минуту до готовности положите на каждую котлету по ломтику сыра, чтобы он расплавился.",
+                "Соберите бургер: булочка, майонез, котлета с сыром, бекон, помидор, кетчуп.",
+                "Подавайте горячими."
             ),
             imageUrl = "burger-cheeseburger.png"
         )
     )
 
-    private val dessertRecipes = emptyList<RecipeDto>()
-    private val pizzaRecipes = emptyList<RecipeDto>()
-    private val fishRecipes = emptyList<RecipeDto>()
-    private val soupRecipes = emptyList<RecipeDto>()
-    private val saladRecipes = emptyList<RecipeDto>()
+private val dessertRecipes = emptyList<RecipeDto>()
+private val pizzaRecipes = emptyList<RecipeDto>()
+private val fishRecipes = emptyList<RecipeDto>()
+private val soupRecipes = emptyList<RecipeDto>()
+private val saladRecipes = emptyList<RecipeDto>()
 
-    fun getCategories(): List<CategoryDto> {
+fun getCategories(): List<CategoryDto> {
         return categories
     }
+
+fun getRecipesByCategoryId(categoryId: Int): List<RecipeDto> {
+    return when (categoryId) {
+        0 -> burgerRecipes
+        1 -> dessertRecipes
+        2 -> pizzaRecipes
+        3 -> fishRecipes
+        4 -> soupRecipes
+        5 -> saladRecipes
+        else -> emptyList()
+    }
+}
 
 fun getRecipeById(recipeId: Int): RecipeDto? {
     return listOf(
