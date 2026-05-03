@@ -20,10 +20,51 @@ import ru.niknekron.recipecomposeapp.ui.theme.RecipeComposeAppTheme
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
 import ru.niknekron.recipecomposeapp.ui.details.RecipeDetailsScreen
+import android.content.Intent
+import androidx.compose.runtime.LaunchedEffect
+import kotlinx.coroutines.delay
+import ru.niknekron.recipecomposeapp.DEEP_LINK_SCHEME
+import ru.niknekron.recipecomposeapp.PARAM_RECIPE_ID
+import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryStub
+import ru.niknekron.recipecomposeapp.ui.recipes.model.toUiModel
 
 @Composable
-fun RecipesApp() {
+fun RecipesApp(
+    deepLinkIntent: Intent? = null,
+) {
     val navController = rememberNavController()
+
+    LaunchedEffect(deepLinkIntent) {
+        deepLinkIntent?.data?.let { uri ->
+            val recipeId = when (uri.scheme) {
+                DEEP_LINK_SCHEME -> {
+                    if (uri.host == "recipe") {
+                        uri.pathSegments.firstOrNull()?.toIntOrNull()
+                    } else {
+                        null
+                    }
+                }
+
+                "https", "http" -> {
+                    if (uri.pathSegments.firstOrNull() == "recipe") {
+                        uri.pathSegments.getOrNull(1)?.toIntOrNull()
+                    } else {
+                        null
+                    }
+                }
+
+                else -> null
+            }
+
+            if (recipeId != null) {
+                delay(100)
+
+                navController.navigate(
+                    Destination.RecipeDetails.createRoute(recipeId)
+                )
+            }
+        }
+    }
 
     RecipeComposeAppTheme {
         Scaffold(
@@ -107,16 +148,22 @@ fun RecipesApp() {
                 composable(
                     route = Destination.RecipeDetails.route,
                     arguments = listOf(
-                        navArgument("recipeId") {
+                        navArgument(PARAM_RECIPE_ID) {
                             type = NavType.IntType
                         }
                     )
                 ) { backStackEntry ->
-                    val recipeId = backStackEntry.arguments?.getInt("recipeId") ?: 0
+                    val recipeId = backStackEntry.arguments?.getInt(PARAM_RECIPE_ID) ?: 0
 
-                    RecipeDetailsScreen(
-                        recipeId = recipeId
-                    )
+                    val recipe = RecipesRepositoryStub
+                        .getRecipeById(recipeId)
+                        ?.toUiModel()
+
+                    recipe?.let {
+                        RecipeDetailsScreen(
+                            recipe = it
+                        )
+                    }
                 }
             }
         }

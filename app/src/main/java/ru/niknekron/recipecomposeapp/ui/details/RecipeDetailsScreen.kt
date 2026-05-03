@@ -9,32 +9,24 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import coil3.compose.rememberAsyncImagePainter
 import ru.niknekron.recipecomposeapp.core.ui.ScreenHeader
-import ru.niknekron.recipecomposeapp.data.repository.getRecipeById
-import ru.niknekron.recipecomposeapp.ui.recipes.model.toUiModel
+import ru.niknekron.recipecomposeapp.ui.recipes.model.RecipeUiModel
 import ru.niknekron.recipecomposeapp.ui.theme.Dimens
+import androidx.compose.ui.platform.LocalContext
+import ru.niknekron.recipecomposeapp.utils.shareRecipe
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 
 @Composable
 fun RecipeDetailsScreen(
-    recipeId: Int,
+    recipe: RecipeUiModel,
     modifier: Modifier = Modifier,
 ) {
-    val recipe = remember(recipeId) {
-        getRecipeById(recipeId)?.toUiModel()
-    }
-
-    if (recipe == null) {
-        Text(
-            text = "Recipe not found",
-            modifier = modifier.padding(Dimens.PaddingMedium),
-            style = MaterialTheme.typography.bodyMedium
-        )
-        return
-    }
-
+    val context = LocalContext.current
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -43,7 +35,15 @@ fun RecipeDetailsScreen(
         ScreenHeader(
             painter = rememberAsyncImagePainter(model = recipe.imageUrl),
             contentDescription = recipe.title,
-            text = recipe.title
+            text = recipe.title,
+            showShareButton = true,
+            onShareClick = {
+                shareRecipe(
+                    context = context,
+                    recipeId = recipe.id,
+                    recipeTitle = recipe.title
+                )
+            }
         )
 
         Text(

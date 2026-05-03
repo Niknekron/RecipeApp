@@ -2,6 +2,7 @@ package ru.niknekron.recipecomposeapp.core.ui.navigation
 
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import ru.niknekron.recipecomposeapp.PARAM_RECIPE_ID
 
 sealed class Destination(val route: String) {
     data object Categories : Destination("categories")
@@ -13,7 +14,7 @@ sealed class Destination(val route: String) {
         }
     }
 
-    data object  RecipeDetails : Destination("recipe/{recipeId}") {
+    data object RecipeDetails : Destination("recipe/{$PARAM_RECIPE_ID}") {
         fun createRoute(recipeId: Int): String {
             return "recipe/$recipeId"
         }
