@@ -16,16 +16,29 @@ import ru.niknekron.recipecomposeapp.ui.recipes.model.RecipeUiModel
 import ru.niknekron.recipecomposeapp.ui.theme.Dimens
 import androidx.compose.ui.platform.LocalContext
 import ru.niknekron.recipecomposeapp.utils.shareRecipe
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Share
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 
 @Composable
 fun RecipeDetailsScreen(
     recipe: RecipeUiModel,
     modifier: Modifier = Modifier,
 ) {
+    var isFavorite by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    var portionsCount by rememberSaveable {
+        mutableStateOf(1)
+    }
+
+    val scaledIngredients = remember(recipe.ingredients, portionsCount) {
+        recipe.ingredients
+    }
+
     val context = LocalContext.current
     Column(
         modifier = modifier
@@ -43,6 +56,11 @@ fun RecipeDetailsScreen(
                     recipeId = recipe.id,
                     recipeTitle = recipe.title
                 )
+            },
+            showFavoriteButton = true,
+            isFavorite = isFavorite,
+            onFavoriteToggle = {
+                isFavorite = !isFavorite
             }
         )
 
@@ -52,12 +70,12 @@ fun RecipeDetailsScreen(
             style = MaterialTheme.typography.titleMedium
         )
 
-        recipe.ingredients.forEachIndexed { index, ingredient ->
+        scaledIngredients.forEachIndexed { index, ingredient ->
             IngredientItem(
                 ingredient = ingredient
             )
 
-            if (index < recipe.ingredients.lastIndex) {
+            if (index < scaledIngredients.lastIndex) {
                 HorizontalDivider()
             }
         }
@@ -81,4 +99,5 @@ fun RecipeDetailsScreen(
             )
         }
     }
+
 }
