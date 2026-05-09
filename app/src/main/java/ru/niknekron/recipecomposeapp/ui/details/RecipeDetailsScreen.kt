@@ -36,7 +36,17 @@ fun RecipeDetailsScreen(
     }
 
     val scaledIngredients = remember(recipe.ingredients, portionsCount) {
-        recipe.ingredients
+        recipe.ingredients.map { ingredient ->
+            val quantityNumber = ingredient.quantity.replace(",",".").toDoubleOrNull()
+
+            if (quantityNumber != null) {
+                ingredient.copy (
+                    quantity = formatQuantity(quantityNumber * portionsCount)
+                )
+            } else {
+                ingredient
+            }
+        }
     }
 
     val context = LocalContext.current
@@ -99,5 +109,11 @@ fun RecipeDetailsScreen(
             )
         }
     }
-
+}
+private fun formatQuantity(value: Double): String {
+    return if (value % 1.0 == 0.0) {
+        value.toInt().toString()
+    } else {
+        String.format("%.1f", value).replace(",", ".")
+    }
 }
