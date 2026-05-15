@@ -21,15 +21,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import ru.niknekron.recipecomposeapp.util.FavoritePrefsManager
+
 
 @Composable
 fun RecipeDetailsScreen(
     recipe: RecipeUiModel,
     modifier: Modifier = Modifier,
 ) {
-    var isFavorite by rememberSaveable {
-        mutableStateOf(false)
-    }
 
     var portionsCount by rememberSaveable {
         mutableStateOf(1)
@@ -50,6 +49,16 @@ fun RecipeDetailsScreen(
     }
 
     val context = LocalContext.current
+
+    val favoritePrefsManager = remember {
+        FavoritePrefsManager(context)
+    }
+
+    var isFavorite by remember(recipe.id) {
+        mutableStateOf(
+            favoritePrefsManager.isFavorite(recipe.id)
+        )
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -70,6 +79,12 @@ fun RecipeDetailsScreen(
             showFavoriteButton = true,
             isFavorite = isFavorite,
             onFavoriteToggle = {
+                if (isFavorite) {
+                    favoritePrefsManager.removeFromFavorites(recipe.id)
+                } else {
+                    favoritePrefsManager.addToFavorites(recipe.id)
+                }
+
                 isFavorite = !isFavorite
             }
         )

@@ -23,8 +23,6 @@ import ru.niknekron.recipecomposeapp.ui.details.RecipeDetailsScreen
 import android.content.Intent
 import androidx.compose.runtime.LaunchedEffect
 import kotlinx.coroutines.delay
-import ru.niknekron.recipecomposeapp.DEEP_LINK_SCHEME
-import ru.niknekron.recipecomposeapp.PARAM_RECIPE_ID
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryStub
 import ru.niknekron.recipecomposeapp.ui.recipes.model.toUiModel
 
@@ -159,10 +157,12 @@ fun RecipesApp(
                         .getRecipeById(recipeId)
                         ?.toUiModel()
 
+
                     recipe?.let {
                         RecipeDetailsScreen(
                             recipe = it
                         )
+
                     }
                 }
             }
