@@ -21,15 +21,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import ru.niknekron.recipecomposeapp.util.FavoritePrefsManager
-
+import ru.niknekron.recipecomposeapp.util.FavoriteDataStoreManager
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun RecipeDetailsScreen(
     recipe: RecipeUiModel,
     modifier: Modifier = Modifier,
 ) {
-
     var portionsCount by rememberSaveable {
         mutableStateOf(1)
     }
@@ -50,14 +51,18 @@ fun RecipeDetailsScreen(
 
     val context = LocalContext.current
 
-    val favoritePrefsManager = remember {
-        FavoritePrefsManager(context)
+    val favoriteDataStoreManager = remember {
+        FavoriteDataStoreManager(context)
     }
 
+    val coroutineScope = rememberCoroutineScope()
+
     var isFavorite by remember(recipe.id) {
-        mutableStateOf(
-            favoritePrefsManager.isFavorite(recipe.id)
-        )
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(recipe.id) {
+        isFavorite = favoriteDataStoreManager.isFavorite(recipe.id)
     }
     Column(
         modifier = modifier
@@ -79,13 +84,15 @@ fun RecipeDetailsScreen(
             showFavoriteButton = true,
             isFavorite = isFavorite,
             onFavoriteToggle = {
-                if (isFavorite) {
-                    favoritePrefsManager.removeFromFavorites(recipe.id)
-                } else {
-                    favoritePrefsManager.addToFavorites(recipe.id)
-                }
+                coroutineScope.launch {
+                    if (isFavorite) {
+                        favoriteDataStoreManager.removeFavorite(recipe.id)
+                    } else {
+                        favoriteDataStoreManager.addFavorite(recipe.id)
+                    }
 
-                isFavorite = !isFavorite
+                    isFavorite = !isFavorite
+                }
             }
         )
 

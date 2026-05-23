@@ -59,4 +59,5 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     implementation(libs.coilCompose)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.datastore.preferences)
 }
