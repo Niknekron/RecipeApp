@@ -89,7 +89,8 @@ fun RecipesApp(
                     },
                     onFavoriteClick = {
                         navController.navigate(Destination.Favorites.route)
-                    }
+                    },
+                    favoriteCount = favoriteCount
                 )
             }
         ) { innerPadding ->
