@@ -25,12 +25,27 @@ import androidx.compose.runtime.LaunchedEffect
 import kotlinx.coroutines.delay
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryStub
 import ru.niknekron.recipecomposeapp.ui.recipes.model.toUiModel
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
+import ru.niknekron.recipecomposeapp.util.FavoriteDataStoreManager
 
 @Composable
 fun RecipesApp(
     deepLinkIntent: Intent? = null,
 ) {
     val navController = rememberNavController()
+
+    val context = LocalContext.current
+
+    val favoriteDataStoreManager = remember {
+        FavoriteDataStoreManager(context)
+    }
+
+    val favoriteCount by favoriteDataStoreManager
+        .getFavoriteCountFlow()
+        .collectAsState(initial = 0)
 
     LaunchedEffect(deepLinkIntent) {
         deepLinkIntent?.data?.let { uri ->
@@ -74,7 +89,8 @@ fun RecipesApp(
                     },
                     onFavoriteClick = {
                         navController.navigate(Destination.Favorites.route)
-                    }
+                    },
+                    favoriteCount = favoriteCount
                 )
             }
         ) { innerPadding ->

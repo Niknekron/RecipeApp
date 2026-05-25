@@ -22,9 +22,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import ru.niknekron.recipecomposeapp.util.FavoriteDataStoreManager
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.launch
+import androidx.compose.runtime.collectAsState
 
 @Composable
 fun RecipeDetailsScreen(
@@ -37,10 +37,10 @@ fun RecipeDetailsScreen(
 
     val scaledIngredients = remember(recipe.ingredients, portionsCount) {
         recipe.ingredients.map { ingredient ->
-            val quantityNumber = ingredient.quantity.replace(",",".").toDoubleOrNull()
+            val quantityNumber = ingredient.quantity.replace(",", ".").toDoubleOrNull()
 
             if (quantityNumber != null) {
-                ingredient.copy (
+                ingredient.copy(
                     quantity = formatQuantity(quantityNumber * portionsCount)
                 )
             } else {
@@ -57,13 +57,10 @@ fun RecipeDetailsScreen(
 
     val coroutineScope = rememberCoroutineScope()
 
-    var isFavorite by remember(recipe.id) {
-        mutableStateOf(false)
-    }
+    val isFavorite by favoriteDataStoreManager
+        .isFavoriteFlow(recipe.id)
+        .collectAsState(initial = false)
 
-    LaunchedEffect(recipe.id) {
-        isFavorite = favoriteDataStoreManager.isFavorite(recipe.id)
-    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -90,8 +87,6 @@ fun RecipeDetailsScreen(
                     } else {
                         favoriteDataStoreManager.addFavorite(recipe.id)
                     }
-
-                    isFavorite = !isFavorite
                 }
             }
         )
@@ -132,6 +127,7 @@ fun RecipeDetailsScreen(
         }
     }
 }
+
 private fun formatQuantity(value: Double): String {
     return if (value % 1.0 == 0.0) {
         value.toInt().toString()
