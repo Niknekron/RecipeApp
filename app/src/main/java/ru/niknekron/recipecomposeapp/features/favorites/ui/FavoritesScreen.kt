@@ -1,4 +1,4 @@
-package ru.niknekron.recipecomposeapp.ui.favorites
+package ru.niknekron.recipecomposeapp.features.favorites.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,14 +13,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import kotlinx.coroutines.flow.map
-import ru.niknekron.recipecomposeapp.R
-import ru.niknekron.recipecomposeapp.core.ui.ScreenHeader
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryStub
-import ru.niknekron.recipecomposeapp.ui.recipes.RecipeItem
-import ru.niknekron.recipecomposeapp.ui.recipes.model.toUiModel
-import ru.niknekron.recipecomposeapp.ui.theme.Dimens
+import ru.niknekron.recipecomposeapp.features.recipes.ui.RecipeItem
+import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiModel
+import ru.niknekron.recipecomposeapp.features.theme.Dimens
 import ru.niknekron.recipecomposeapp.util.FavoriteDataStoreManager
 import androidx.compose.runtime.remember
 

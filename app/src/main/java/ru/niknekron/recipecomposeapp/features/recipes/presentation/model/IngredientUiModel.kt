@@ -1,4 +1,4 @@
-package ru.niknekron.recipecomposeapp.ui.recipes.model
+package ru.niknekron.recipecomposeapp.features.recipes.presentation.model
 
 import android.os.Parcelable
 import androidx.compose.runtime.Immutable
