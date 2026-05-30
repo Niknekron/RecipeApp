@@ -13,18 +13,18 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ru.niknekron.recipecomposeapp.core.ui.navigation.BottomNavigation
 import ru.niknekron.recipecomposeapp.core.ui.navigation.Destination
-import ru.niknekron.recipecomposeapp.ui.categories.CategoriesScreen
-import ru.niknekron.recipecomposeapp.ui.favorites.FavoritesScreen
-import ru.niknekron.recipecomposeapp.ui.recipes.RecipesScreen
-import ru.niknekron.recipecomposeapp.ui.theme.RecipeComposeAppTheme
+import ru.niknekron.recipecomposeapp.features.categories.ui.CategoriesScreen
+import ru.niknekron.recipecomposeapp.features.favorites.ui.FavoritesScreen
+import ru.niknekron.recipecomposeapp.features.recipes.ui.RecipesScreen
+import ru.niknekron.recipecomposeapp.features.theme.RecipeComposeAppTheme
 import java.net.URLDecoder
 import java.nio.charset.StandardCharsets
-import ru.niknekron.recipecomposeapp.ui.details.RecipeDetailsScreen
+import ru.niknekron.recipecomposeapp.features.details.ui.RecipeDetailsScreen
 import android.content.Intent
 import androidx.compose.runtime.LaunchedEffect
 import kotlinx.coroutines.delay
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryStub
-import ru.niknekron.recipecomposeapp.ui.recipes.model.toUiModel
+import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -123,7 +123,15 @@ fun RecipesApp(
                 }
 
                 composable(route = Destination.Favorites.route) {
-                    FavoritesScreen()
+                    FavoritesScreen(
+                        recipesRepository = RecipesRepositoryStub,
+                        favoriteDataStoreManager = favoriteDataStoreManager,
+                        onRecipeClick = { recipeId ->
+                            navController.navigate(
+                                Destination.RecipeDetails.createRoute(recipeId)
+                            )
+                        }
+                    )
                 }
 
                 composable(
