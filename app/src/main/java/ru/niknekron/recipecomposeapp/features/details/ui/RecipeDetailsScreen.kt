@@ -1,4 +1,4 @@
-package ru.niknekron.recipecomposeapp.ui.details
+package ru.niknekron.recipecomposeapp.features.details.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,8 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import coil3.compose.rememberAsyncImagePainter
 import ru.niknekron.recipecomposeapp.core.ui.ScreenHeader
-import ru.niknekron.recipecomposeapp.ui.recipes.model.RecipeUiModel
-import ru.niknekron.recipecomposeapp.ui.theme.Dimens
+import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
+import ru.niknekron.recipecomposeapp.features.theme.Dimens
 import androidx.compose.ui.platform.LocalContext
 import ru.niknekron.recipecomposeapp.utils.shareRecipe
 import androidx.compose.runtime.getValue

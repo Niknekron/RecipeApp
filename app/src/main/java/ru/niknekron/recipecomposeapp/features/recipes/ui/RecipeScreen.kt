@@ -1,4 +1,4 @@
-package ru.niknekron.recipecomposeapp.ui.recipes
+package ru.niknekron.recipecomposeapp.features.recipes.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,9 +17,9 @@ import androidx.compose.ui.res.painterResource
 import ru.niknekron.recipecomposeapp.R
 import ru.niknekron.recipecomposeapp.core.ui.ScreenHeader
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryStub.getRecipesByCategoryId
-import ru.niknekron.recipecomposeapp.ui.recipes.model.RecipeUiModel
-import ru.niknekron.recipecomposeapp.ui.recipes.model.toUiModel
-import ru.niknekron.recipecomposeapp.ui.theme.Dimens
+import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
+import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiModel
+import ru.niknekron.recipecomposeapp.features.theme.Dimens
 
 @Composable
 fun RecipesScreen(

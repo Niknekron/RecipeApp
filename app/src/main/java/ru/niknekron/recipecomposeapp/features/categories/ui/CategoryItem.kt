@@ -1,4 +1,4 @@
-package ru.niknekron.recipecomposeapp.ui.categories
+package ru.niknekron.recipecomposeapp.features.categories.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,8 +20,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 
 import coil3.compose.SubcomposeAsyncImage
-import ru.niknekron.recipecomposeapp.ui.categories.model.CategoryUiModel
-import ru.niknekron.recipecomposeapp.ui.theme.Dimens
+import ru.niknekron.recipecomposeapp.features.categories.presentation.model.CategoryUiModel
+import ru.niknekron.recipecomposeapp.features.theme.Dimens
 
 @Composable
 fun CategoryItem(

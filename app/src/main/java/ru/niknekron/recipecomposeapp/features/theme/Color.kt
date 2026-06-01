@@ -1,4 +1,4 @@
-package ru.niknekron.recipecomposeapp.ui.theme
+package ru.niknekron.recipecomposeapp.features.theme
 
 import androidx.compose.ui.graphics.Color
 
