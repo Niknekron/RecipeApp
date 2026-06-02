@@ -101,17 +101,7 @@ fun RecipesApp(
             ) {
                 composable(route = Destination.Categories.route) {
                     CategoriesScreen(
-                        onCategoryClick = { categoryId ->
-                            val categoryTitle = when (categoryId) {
-                                0 -> "Бургеры"
-                                1 -> "Десерты"
-                                2 -> "Пицца"
-                                3 -> "Рыба"
-                                4 -> "Супы"
-                                5 -> "Салаты"
-                                else -> "Рецепты"
-                            }
-
+                        onCategoryClick = { categoryId, categoryTitle, imageUrl ->
                             navController.navigate(
                                 Destination.Recipes.createRoute(
                                     categoryId = categoryId,
