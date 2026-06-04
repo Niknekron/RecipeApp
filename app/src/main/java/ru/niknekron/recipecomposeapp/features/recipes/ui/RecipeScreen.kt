@@ -1,63 +1,94 @@
 package ru.niknekron.recipecomposeapp.features.recipes.ui
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import ru.niknekron.recipecomposeapp.R
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.rememberAsyncImagePainter
 import ru.niknekron.recipecomposeapp.core.ui.ScreenHeader
-import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryStub.getRecipesByCategoryId
-import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
-import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiModel
+import ru.niknekron.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 import ru.niknekron.recipecomposeapp.features.theme.Dimens
 
 @Composable
 fun RecipesScreen(
-    categoryId: Int,
-    categoryTitle: String,
     onRecipeClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: RecipesViewModel = viewModel(),
 ) {
-    var recipes by remember { mutableStateOf<List<RecipeUiModel>>(emptyList()) }
+    val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(categoryId) {
-        recipes = getRecipesByCategoryId(categoryId).map { it.toUiModel() }
-    }
+    when {
+        uiState.isLoading -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
 
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        ScreenHeader(
-            painter = painterResource(id = R.drawable.categories_image),
-            contentDescription = "Recipes header image",
-            text = categoryTitle
-        )
-
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(Dimens.PaddingMedium),
-            verticalArrangement = Arrangement.spacedBy(Dimens.PaddingMedium)
-        ) {
-            items(
-                items = recipes,
-                key = { it.id }
-            ) { recipe ->
-                RecipeItem(
-                    recipe = recipe,
-                    onClick = { recipeId ->
-                        onRecipeClick(recipeId)
-                    }
+        uiState.error != null -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = uiState.error.orEmpty(),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error
                 )
+            }
+        }
+
+        uiState.isEmpty -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "В этой категории пока нет рецептов",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            }
+        }
+
+        else -> {
+            LazyColumn(
+                modifier = modifier.fillMaxSize(),
+                contentPadding = PaddingValues(Dimens.PaddingMedium),
+                verticalArrangement = Arrangement.spacedBy(Dimens.PaddingMedium)
+            ) {
+                item {
+                    ScreenHeader(
+                        painter = rememberAsyncImagePainter(model = uiState.categoryImageUrl),
+                        contentDescription = uiState.categoryTitle,
+                        text = uiState.categoryTitle
+                    )
+                }
+
+                items(
+                    items = uiState.recipes,
+                    key = { it.id }
+                ) { recipe ->
+                    RecipeItem(
+                        recipe = recipe,
+                        onClick = { recipeId ->
+                            onRecipeClick(recipeId)
+                        }
+                    )
+                }
             }
         }
     }

@@ -101,11 +101,12 @@ fun RecipesApp(
             ) {
                 composable(route = Destination.Categories.route) {
                     CategoriesScreen(
-                        onCategoryClick = { categoryId, categoryTitle, imageUrl ->
+                        onCategoryClick = { categoryId, categoryTitle, categoryImageUrl ->
                             navController.navigate(
                                 Destination.Recipes.createRoute(
                                     categoryId = categoryId,
-                                    categoryTitle = categoryTitle
+                                    categoryTitle = categoryTitle,
+                                    categoryImageUrl = categoryImageUrl,
                                 )
                             )
                         }
@@ -127,10 +128,13 @@ fun RecipesApp(
                 composable(
                     route = Destination.Recipes.route,
                     arguments = listOf(
-                        navArgument("categoryId") {
+                        navArgument(PARAM_CATEGORY_ID) {
                             type = NavType.IntType
                         },
-                        navArgument("categoryTitle") {
+                        navArgument(PARAM_CATEGORY_TITLE) {
+                            type = NavType.StringType
+                        },
+                        navArgument(PARAM_CATEGORY_IMAGE_URL) {
                             type = NavType.StringType
                         }
                     )
@@ -147,8 +151,6 @@ fun RecipesApp(
                     )
 
                     RecipesScreen(
-                        categoryId = categoryId,
-                        categoryTitle = categoryTitle,
                         onRecipeClick = { recipeId ->
                             navController.navigate(
                                 Destination.RecipeDetails.createRoute(recipeId)
