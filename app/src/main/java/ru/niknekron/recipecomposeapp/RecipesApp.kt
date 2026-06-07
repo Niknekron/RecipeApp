@@ -115,8 +115,6 @@ fun RecipesApp(
 
                 composable(route = Destination.Favorites.route) {
                     FavoritesScreen(
-                        recipesRepository = RecipesRepositoryStub,
-                        favoriteDataStoreManager = favoriteDataStoreManager,
                         onRecipeClick = { recipeId ->
                             navController.navigate(
                                 Destination.RecipeDetails.createRoute(recipeId)
