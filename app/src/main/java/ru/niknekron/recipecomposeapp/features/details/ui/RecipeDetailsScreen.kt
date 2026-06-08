@@ -9,57 +9,33 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.rememberAsyncImagePainter
 import ru.niknekron.recipecomposeapp.core.ui.ScreenHeader
+import ru.niknekron.recipecomposeapp.features.details.presentation.model.RecipeDetailsViewModel
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import ru.niknekron.recipecomposeapp.features.theme.Dimens
-import androidx.compose.ui.platform.LocalContext
 import ru.niknekron.recipecomposeapp.utils.shareRecipe
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import ru.niknekron.recipecomposeapp.util.FavoriteDataStoreManager
-import androidx.compose.runtime.rememberCoroutineScope
-import kotlinx.coroutines.launch
-import androidx.compose.runtime.collectAsState
 
 @Composable
 fun RecipeDetailsScreen(
     recipe: RecipeUiModel,
     modifier: Modifier = Modifier,
+    viewModel: RecipeDetailsViewModel = viewModel(),
 ) {
-    var portionsCount by rememberSaveable {
-        mutableStateOf(1)
-    }
-
-    val scaledIngredients = remember(recipe.ingredients, portionsCount) {
-        recipe.ingredients.map { ingredient ->
-            val quantityNumber = ingredient.quantity.replace(",", ".").toDoubleOrNull()
-
-            if (quantityNumber != null) {
-                ingredient.copy(
-                    quantity = formatQuantity(quantityNumber * portionsCount)
-                )
-            } else {
-                ingredient
-            }
-        }
-    }
-
     val context = LocalContext.current
+    val uiState by viewModel.uiState.collectAsState()
 
-    val favoriteDataStoreManager = remember {
-        FavoriteDataStoreManager(context)
+    LaunchedEffect(recipe.id) {
+        viewModel.initializeWithRecipe(recipe)
     }
 
-    val coroutineScope = rememberCoroutineScope()
-
-    val isFavorite by favoriteDataStoreManager
-        .isFavoriteFlow(recipe.id)
-        .collectAsState(initial = false)
+    val currentRecipe = uiState.recipe ?: recipe
 
     Column(
         modifier = modifier
@@ -67,28 +43,20 @@ fun RecipeDetailsScreen(
             .verticalScroll(rememberScrollState())
     ) {
         ScreenHeader(
-            painter = rememberAsyncImagePainter(model = recipe.imageUrl),
-            contentDescription = recipe.title,
-            text = recipe.title,
+            painter = rememberAsyncImagePainter(model = currentRecipe.imageUrl),
+            contentDescription = currentRecipe.title,
+            text = currentRecipe.title,
             showShareButton = true,
             onShareClick = {
                 shareRecipe(
                     context = context,
-                    recipeId = recipe.id,
-                    recipeTitle = recipe.title
+                    recipeId = currentRecipe.id,
+                    recipeTitle = currentRecipe.title
                 )
             },
             showFavoriteButton = true,
-            isFavorite = isFavorite,
-            onFavoriteToggle = {
-                coroutineScope.launch {
-                    if (isFavorite) {
-                        favoriteDataStoreManager.removeFavorite(recipe.id)
-                    } else {
-                        favoriteDataStoreManager.addFavorite(recipe.id)
-                    }
-                }
-            }
+            isFavorite = uiState.isFavorite,
+            onFavoriteToggle = viewModel::toggleFavorite
         )
 
         Text(
@@ -97,12 +65,12 @@ fun RecipeDetailsScreen(
             style = MaterialTheme.typography.titleMedium
         )
 
-        scaledIngredients.forEachIndexed { index, ingredient ->
+        uiState.scaledIngredients.forEachIndexed { index, ingredient ->
             IngredientItem(
                 ingredient = ingredient
             )
 
-            if (index < scaledIngredients.lastIndex) {
+            if (index < uiState.scaledIngredients.lastIndex) {
                 HorizontalDivider()
             }
         }
@@ -113,7 +81,7 @@ fun RecipeDetailsScreen(
             style = MaterialTheme.typography.titleMedium
         )
 
-        recipe.method.forEachIndexed { index, step ->
+        currentRecipe.method.forEachIndexed { index, step ->
             Text(
                 text = "${index + 1}. $step",
                 modifier = Modifier.padding(
@@ -125,13 +93,5 @@ fun RecipeDetailsScreen(
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
-    }
-}
-
-private fun formatQuantity(value: Double): String {
-    return if (value % 1.0 == 0.0) {
-        value.toInt().toString()
-    } else {
-        String.format("%.1f", value).replace(",", ".")
     }
 }
