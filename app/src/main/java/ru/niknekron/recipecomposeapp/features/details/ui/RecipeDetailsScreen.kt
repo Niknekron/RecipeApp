@@ -9,7 +9,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -18,24 +17,28 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.rememberAsyncImagePainter
 import ru.niknekron.recipecomposeapp.core.ui.ScreenHeader
 import ru.niknekron.recipecomposeapp.features.details.presentation.model.RecipeDetailsViewModel
-import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import ru.niknekron.recipecomposeapp.features.theme.Dimens
 import ru.niknekron.recipecomposeapp.utils.shareRecipe
 
 @Composable
 fun RecipeDetailsScreen(
-    recipe: RecipeUiModel,
     modifier: Modifier = Modifier,
     viewModel: RecipeDetailsViewModel = viewModel(),
 ) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(recipe.id) {
-        viewModel.initializeWithRecipe(recipe)
-    }
 
-    val currentRecipe = uiState.recipe ?: recipe
+    val recipe = uiState.recipe
+
+    if (recipe == null) {
+        Text(
+            text = uiState.error ?: "Рецепт загружается",
+            modifier = modifier.padding(Dimens.PaddingMedium),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        return
+    }
 
     Column(
         modifier = modifier
@@ -43,15 +46,15 @@ fun RecipeDetailsScreen(
             .verticalScroll(rememberScrollState())
     ) {
         ScreenHeader(
-            painter = rememberAsyncImagePainter(model = currentRecipe.imageUrl),
-            contentDescription = currentRecipe.title,
-            text = currentRecipe.title,
+            painter = rememberAsyncImagePainter(model = recipe.imageUrl),
+            contentDescription = recipe.title,
+            text = recipe.title,
             showShareButton = true,
             onShareClick = {
                 shareRecipe(
                     context = context,
-                    recipeId = currentRecipe.id,
-                    recipeTitle = currentRecipe.title
+                    recipeId = recipe.id,
+                    recipeTitle = recipe.title
                 )
             },
             showFavoriteButton = true,
@@ -81,7 +84,7 @@ fun RecipeDetailsScreen(
             style = MaterialTheme.typography.titleMedium
         )
 
-        currentRecipe.method.forEachIndexed { index, step ->
+        recipe.method.forEachIndexed { index, step ->
             Text(
                 text = "${index + 1}. $step",
                 modifier = Modifier.padding(
