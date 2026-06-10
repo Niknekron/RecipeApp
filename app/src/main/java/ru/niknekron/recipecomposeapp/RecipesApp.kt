@@ -1,34 +1,30 @@
 package ru.niknekron.recipecomposeapp
 
+import android.content.Intent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import kotlinx.coroutines.delay
 import ru.niknekron.recipecomposeapp.core.ui.navigation.BottomNavigation
 import ru.niknekron.recipecomposeapp.core.ui.navigation.Destination
 import ru.niknekron.recipecomposeapp.features.categories.ui.CategoriesScreen
+import ru.niknekron.recipecomposeapp.features.details.ui.RecipeDetailsScreen
 import ru.niknekron.recipecomposeapp.features.favorites.ui.FavoritesScreen
 import ru.niknekron.recipecomposeapp.features.recipes.ui.RecipesScreen
 import ru.niknekron.recipecomposeapp.features.theme.RecipeComposeAppTheme
-import java.net.URLDecoder
-import java.nio.charset.StandardCharsets
-import ru.niknekron.recipecomposeapp.features.details.ui.RecipeDetailsScreen
-import android.content.Intent
-import androidx.compose.runtime.LaunchedEffect
-import kotlinx.coroutines.delay
-import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryStub
-import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiModel
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
 import ru.niknekron.recipecomposeapp.util.FavoriteDataStoreManager
 
 @Composable
@@ -36,7 +32,6 @@ fun RecipesApp(
     deepLinkIntent: Intent? = null,
 ) {
     val navController = rememberNavController()
-
     val context = LocalContext.current
 
     val favoriteDataStoreManager = remember {
@@ -106,7 +101,7 @@ fun RecipesApp(
                                 Destination.Recipes.createRoute(
                                     categoryId = categoryId,
                                     categoryTitle = categoryTitle,
-                                    categoryImageUrl = categoryImageUrl,
+                                    categoryImageUrl = categoryImageUrl
                                 )
                             )
                         }
@@ -136,18 +131,7 @@ fun RecipesApp(
                             type = NavType.StringType
                         }
                     )
-                ) { backStackEntry ->
-                    val categoryId =
-                        backStackEntry.arguments?.getInt("categoryId") ?: 0
-
-                    val encodedTitle =
-                        backStackEntry.arguments?.getString("categoryTitle").orEmpty()
-
-                    val categoryTitle = URLDecoder.decode(
-                        encodedTitle,
-                        StandardCharsets.UTF_8.toString()
-                    )
-
+                ) {
                     RecipesScreen(
                         onRecipeClick = { recipeId ->
                             navController.navigate(
@@ -164,20 +148,8 @@ fun RecipesApp(
                             type = NavType.IntType
                         }
                     )
-                ) { backStackEntry ->
-                    val recipeId = backStackEntry.arguments?.getInt(PARAM_RECIPE_ID) ?: 0
-
-                    val recipe = RecipesRepositoryStub
-                        .getRecipeById(recipeId)
-                        ?.toUiModel()
-
-
-                    recipe?.let {
-                        RecipeDetailsScreen(
-                            recipe = it
-                        )
-
-                    }
+                ) {
+                    RecipeDetailsScreen()
                 }
             }
         }
