@@ -48,14 +48,20 @@ class MainActivity : ComponentActivity() {
 
             try {
                 val url = URL("https://recipes.androidsprint.ru/api/category")
-                val connection = url.openConnection() as HttpURLConnection
+                val connection = url.openConnection() as? HttpURLConnection
+
+                    ?: throw IllegalStateException(
+                        "Не удалось создать HttpURLConnection"
+                    )
 
                 connection.requestMethod = "GET"
                 connection.connect()
 
                 val response = BufferedReader(
                     connection.inputStream.reader()
-                ).readText()
+                ).use { reader ->
+                    reader.readText()
+                }
 
                 val categories = Json.decodeFromString(
                     ListSerializer(CategoryDto.serializer()),
@@ -94,14 +100,20 @@ class MainActivity : ComponentActivity() {
                 )
 
                 val recipesConnection =
-                    recipesUrl.openConnection() as HttpURLConnection
+                    recipesUrl.openConnection() as? HttpURLConnection
+
+                        ?: throw IllegalStateException(
+                            "Не удалось создать HttpURLConnection"
+                        )
 
                 recipesConnection.requestMethod = "GET"
                 recipesConnection.connect()
 
                 val recipesResponse = BufferedReader(
                     recipesConnection.inputStream.reader()
-                ).readText()
+                ).use { reader ->
+                    reader.readText()
+                }
 
                 println(
                     "Категория '${category.title}': responseCode=${recipesConnection.responseCode}"
