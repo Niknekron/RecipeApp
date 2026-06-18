@@ -7,19 +7,17 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import ru.niknekron.recipecomposeapp.data.model.CategoryDto
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import kotlin.concurrent.thread
 
 class MainActivity : ComponentActivity() {
 
     private val okHttpClient: OkHttpClient = OkHttpClient()
 
-    private val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
 
     private var deepLinkIntent by mutableStateOf<Intent?>(null)
 
@@ -42,7 +40,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun loadCategories() {
-        threadPool.execute {
+        thread {
             println(
                 "Запрашиваю категории на потоке: ${Thread.currentThread().name}"
             )
@@ -57,7 +55,7 @@ class MainActivity : ComponentActivity() {
                     .execute()
 
                 val responseBody = response.body?.string()
-                    ?:throw IllegalStateException(
+                    ?: throw IllegalStateException(
                         "Пустой ответ сервера"
                     )
 
@@ -85,7 +83,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun loadRecipesForCategory(category: CategoryDto) {
-        threadPool.execute {
+        thread {
             println(
                 "Запрашиваю рецепты категории '${category.title}' на потоке: ${Thread.currentThread().name}"
             )
@@ -128,11 +126,5 @@ class MainActivity : ComponentActivity() {
 
         setIntent(intent)
         deepLinkIntent = intent
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        threadPool.shutdown()
     }
 }
