@@ -7,18 +7,17 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import java.io.BufferedReader
-import java.net.HttpURLConnection
-import java.net.URL
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import ru.niknekron.recipecomposeapp.data.model.CategoryDto
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import kotlin.concurrent.thread
 
 class MainActivity : ComponentActivity() {
 
-    private val threadPool: ExecutorService = Executors.newFixedThreadPool(10)
+    private val okHttpClient: OkHttpClient = OkHttpClient()
+
 
     private var deepLinkIntent by mutableStateOf<Intent?>(null)
 
@@ -41,31 +40,28 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun loadCategories() {
-        threadPool.execute {
+        thread {
             println(
                 "Запрашиваю категории на потоке: ${Thread.currentThread().name}"
             )
 
             try {
-                val url = URL("https://recipes.androidsprint.ru/api/category")
-                val connection = url.openConnection() as? HttpURLConnection
+                val request = Request.Builder()
+                    .url("https://recipes.androidsprint.ru/api/category")
+                    .build()
 
+                val response = okHttpClient
+                    .newCall(request)
+                    .execute()
+
+                val responseBody = response.body?.string()
                     ?: throw IllegalStateException(
-                        "Не удалось создать HttpURLConnection"
+                        "Пустой ответ сервера"
                     )
-
-                connection.requestMethod = "GET"
-                connection.connect()
-
-                val response = BufferedReader(
-                    connection.inputStream.reader()
-                ).use { reader ->
-                    reader.readText()
-                }
 
                 val categories = Json.decodeFromString(
                     ListSerializer(CategoryDto.serializer()),
-                    response
+                    responseBody
                 )
 
                 println("Получено категорий: ${categories.size}")
@@ -77,8 +73,6 @@ class MainActivity : ComponentActivity() {
                 categories.forEach { category ->
                     loadRecipesForCategory(category)
                 }
-
-                connection.disconnect()
             } catch (exception: Exception) {
                 println(
                     "Ошибка при загрузке категорий: ${exception.message}"
@@ -89,41 +83,35 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun loadRecipesForCategory(category: CategoryDto) {
-        threadPool.execute {
+        thread {
             println(
                 "Запрашиваю рецепты категории '${category.title}' на потоке: ${Thread.currentThread().name}"
             )
 
             try {
-                val recipesUrl = URL(
-                    "https://recipes.androidsprint.ru/api/category/${category.id}/recipes"
-                )
 
-                val recipesConnection =
-                    recipesUrl.openConnection() as? HttpURLConnection
+                val request = Request.Builder()
+                    .url(
+                        "https://recipes.androidsprint.ru/api/category/${category.id}/recipes"
+                    )
+                    .build()
 
-                        ?: throw IllegalStateException(
-                            "Не удалось создать HttpURLConnection"
-                        )
+                val response = okHttpClient
+                    .newCall(request)
+                    .execute()
 
-                recipesConnection.requestMethod = "GET"
-                recipesConnection.connect()
-
-                val recipesResponse = BufferedReader(
-                    recipesConnection.inputStream.reader()
-                ).use { reader ->
-                    reader.readText()
-                }
+                val responseBody = response.body?.string()
+                    ?: throw IllegalStateException(
+                        "Пустой ответ сервера"
+                    )
 
                 println(
-                    "Категория '${category.title}': responseCode=${recipesConnection.responseCode}"
+                    "Категория '${category.title}' выполняется на потоке: ${Thread.currentThread().name}"
                 )
 
                 println(
-                    "Категория '${category.title}': получено ${recipesResponse.length} символов ответа"
+                    "Категория '${category.title}': получено ${responseBody.length} символов"
                 )
-
-                recipesConnection.disconnect()
             } catch (exception: Exception) {
                 println(
                     "Ошибка при загрузке рецептов категории '${category.title}': ${exception.message}"
@@ -138,11 +126,5 @@ class MainActivity : ComponentActivity() {
 
         setIntent(intent)
         deepLinkIntent = intent
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        threadPool.shutdown()
     }
 }
