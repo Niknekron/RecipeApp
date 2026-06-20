@@ -13,11 +13,33 @@ import ru.niknekron.recipecomposeapp.data.model.CategoryDto
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import kotlin.concurrent.thread
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import okhttp3.MediaType.Companion.toMediaType
+import retrofit2.Retrofit
+import ru.niknekron.recipecomposeapp.core.network.api.NetworkConfig
+import ru.niknekron.recipecomposeapp.core.network.api.RecipesApiService
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
 
     private val okHttpClient: OkHttpClient = OkHttpClient()
 
+    private val json = Json {
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+    }
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(NetworkConfig.BASE_URL)
+        .addConverterFactory(
+            json.asConverterFactory(
+                "application/json".toMediaType()
+            )
+        )
+        .build()
+
+    private val apiService: RecipesApiService =
+        retrofit.create(RecipesApiService::class.java)
 
     private var deepLinkIntent by mutableStateOf<Intent?>(null)
 
@@ -42,27 +64,13 @@ class MainActivity : ComponentActivity() {
     private fun loadCategories() {
         thread {
             println(
-                "Запрашиваю категории на потоке: ${Thread.currentThread().name}"
+                "Запрашиваю категории через Retrofit на потоке: ${Thread.currentThread().name}"
             )
 
             try {
-                val request = Request.Builder()
-                    .url("https://recipes.androidsprint.ru/api/category")
-                    .build()
-
-                val response = okHttpClient
-                    .newCall(request)
-                    .execute()
-
-                val responseBody = response.body?.string()
-                    ?: throw IllegalStateException(
-                        "Пустой ответ сервера"
-                    )
-
-                val categories = Json.decodeFromString(
-                    ListSerializer(CategoryDto.serializer()),
-                    responseBody
-                )
+                val categories = runBlocking {
+                    apiService.getCategories()
+                }
 
                 println("Получено категорий: ${categories.size}")
 
@@ -85,32 +93,16 @@ class MainActivity : ComponentActivity() {
     private fun loadRecipesForCategory(category: CategoryDto) {
         thread {
             println(
-                "Запрашиваю рецепты категории '${category.title}' на потоке: ${Thread.currentThread().name}"
+                "Запрашиваю рецепты категории '${category.title}' через Retrofit на потоке: ${Thread.currentThread().name}"
             )
 
             try {
-
-                val request = Request.Builder()
-                    .url(
-                        "https://recipes.androidsprint.ru/api/category/${category.id}/recipes"
-                    )
-                    .build()
-
-                val response = okHttpClient
-                    .newCall(request)
-                    .execute()
-
-                val responseBody = response.body?.string()
-                    ?: throw IllegalStateException(
-                        "Пустой ответ сервера"
-                    )
+                val recipes = runBlocking {
+                    apiService.getRecipesByCategory(category.id)
+                }
 
                 println(
-                    "Категория '${category.title}' выполняется на потоке: ${Thread.currentThread().name}"
-                )
-
-                println(
-                    "Категория '${category.title}': получено ${responseBody.length} символов"
+                    "Категория '${category.title}': получено рецептов: ${recipes.size}"
                 )
             } catch (exception: Exception) {
                 println(
