@@ -10,14 +10,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryStub
 import ru.niknekron.recipecomposeapp.util.FavoriteDataStoreManager
 import ru.niknekron.recipecomposeapp.PARAM_RECIPE_ID
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiModel
+import ru.niknekron.recipecomposeapp.data.repository.RecipesRepository
 
 class RecipeDetailsViewModel(
-    private val savedStateHandle: SavedStateHandle,
     application: Application,
+    savedStateHandle: SavedStateHandle,
+    private val repository: RecipesRepository,
 ) : AndroidViewModel(application) {
 
     private val recipeId: Int =
@@ -57,8 +58,8 @@ class RecipeDetailsViewModel(
             }
 
             try {
-                val recipe = RecipesRepositoryStub
-                    .getRecipeById(recipeId)
+                val recipe = repository
+                    .getRecipe(recipeId)
                     ?.toUiModel()
 
                 _uiState.update { currentState ->

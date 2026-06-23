@@ -15,9 +15,11 @@ import ru.niknekron.recipecomposeapp.PARAM_CATEGORY_TITLE
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryStub
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.RecipeUiState
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiModel
+import ru.niknekron.recipecomposeapp.data.repository.RecipesRepository
 
 class RecipesViewModel(
     savedStateHandle: SavedStateHandle,
+    private val repository: RecipesRepository,
 ) : ViewModel() {
 
     private val categoryId: Int =
@@ -56,8 +58,8 @@ class RecipesViewModel(
             }
 
             try {
-                val recipes = RecipesRepositoryStub
-                    .getRecipesByCategoryId(categoryId)
+                val recipes = repository
+                    .getRecipesByCategory(categoryId)
                     .map { recipeDto ->
                         recipeDto.toUiModel()
                     }

@@ -7,20 +7,18 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 import ru.niknekron.recipecomposeapp.data.model.CategoryDto
-import okhttp3.Request
-import kotlin.concurrent.thread
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import ru.niknekron.recipecomposeapp.core.network.api.NetworkConfig
 import ru.niknekron.recipecomposeapp.core.network.api.RecipesApiService
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryImpl
+
 
 class MainActivity : ComponentActivity() {
 
@@ -57,7 +55,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             RecipesApp(
-                deepLinkIntent = deepLinkIntent
+                deepLinkIntent = deepLinkIntent,
+                apiService = apiService
             )
         }
     }
