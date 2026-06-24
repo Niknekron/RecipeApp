@@ -5,18 +5,24 @@ import kotlinx.coroutines.withContext
 import ru.niknekron.recipecomposeapp.core.network.api.RecipesApiService
 import ru.niknekron.recipecomposeapp.data.model.CategoryDto
 import ru.niknekron.recipecomposeapp.data.model.RecipeDto
+import android.util.Log
 
 class RecipesRepositoryImpl(
     private val apiService: RecipesApiService,
 ) : RecipesRepository {
 
+    private companion object{
+        const val TAG = "RecipesRepository"
+    }
     override suspend fun getCategories(): List<CategoryDto> {
         return withContext(Dispatchers.IO) {
             try {
                 apiService.getCategories()
             } catch (exception: Exception) {
-                println(
-                    "Ошибка при загрузке категорий: ${exception.message}"
+                Log.e(
+                    TAG,
+                    "Ошибка при загрузке категорий",
+                    exception
                 )
                 emptyList()
             }
@@ -30,8 +36,10 @@ class RecipesRepositoryImpl(
             try {
                 apiService.getRecipesByCategory(categoryId)
             } catch (exception: Exception) {
-                println(
-                    "Ошибка при загрузке рецептов категории $categoryId: ${exception.message}"
+                Log.e(
+                    TAG,
+                    "Ошибка при загрузке рецептов категории $categoryId",
+                    exception
                 )
                 emptyList()
             }
@@ -43,16 +51,12 @@ class RecipesRepositoryImpl(
     ): RecipeDto? {
         return withContext(Dispatchers.IO) {
             try {
-                getCategories()
-                    .flatMap { category ->
-                        getRecipesByCategory(category.id)
-                    }
-                    .firstOrNull { recipe ->
-                        recipe.id == recipeId
-                    }
+                apiService.getRecipe(recipeId)
             } catch (exception: Exception) {
-                println(
-                    "Ошибка при загрузке рецепта $recipeId: ${exception.message}"
+                Log.e(
+                    TAG,
+                    "Ошибка при загрузке рецепта $recipeId",
+                    exception
                 )
                 throw exception
             }

@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 import ru.niknekron.recipecomposeapp.PARAM_CATEGORY_ID
 import ru.niknekron.recipecomposeapp.PARAM_CATEGORY_IMAGE_URL
 import ru.niknekron.recipecomposeapp.PARAM_CATEGORY_TITLE
-import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryStub
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.RecipeUiState
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiModel
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepository
