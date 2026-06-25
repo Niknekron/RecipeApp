@@ -11,9 +11,10 @@ class RecipesRepositoryImpl(
     private val apiService: RecipesApiService,
 ) : RecipesRepository {
 
-    private companion object{
+    private companion object {
         const val TAG = "RecipesRepository"
     }
+
     override suspend fun getCategories(): List<CategoryDto> {
         return withContext(Dispatchers.IO) {
             try {
@@ -58,7 +59,8 @@ class RecipesRepositoryImpl(
                     "Ошибка при загрузке рецепта $recipeId",
                     exception
                 )
-                throw exception
+
+                null
             }
         }
     }
