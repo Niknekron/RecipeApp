@@ -7,11 +7,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryStub
+import ru.niknekron.recipecomposeapp.data.repository.RecipesRepository
 import ru.niknekron.recipecomposeapp.features.categories.presentation.model.CategoriesUiState
 import ru.niknekron.recipecomposeapp.features.categories.presentation.model.toUiModel
 
-class CategoriesViewModel : ViewModel() {
+class CategoriesViewModel(
+    private val repository: RecipesRepository,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CategoriesUiState())
     val uiState: StateFlow<CategoriesUiState> = _uiState.asStateFlow()
@@ -30,7 +32,7 @@ class CategoriesViewModel : ViewModel() {
             }
 
             try {
-                val categories = RecipesRepositoryStub
+                val categories = repository
                     .getCategories()
                     .map { categoryDto ->
                         categoryDto.toUiModel()
@@ -54,3 +56,5 @@ class CategoriesViewModel : ViewModel() {
         }
     }
 }
+
+
