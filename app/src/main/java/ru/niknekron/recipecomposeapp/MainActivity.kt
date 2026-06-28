@@ -17,7 +17,10 @@ import ru.niknekron.recipecomposeapp.core.network.api.RecipesApiService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryImpl
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import java.util.concurrent.TimeUnit
+
 
 
 class MainActivity : ComponentActivity() {
@@ -28,8 +31,24 @@ class MainActivity : ComponentActivity() {
         coerceInputValues = true
     }
 
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor.Level.BODY
+        } else {
+            HttpLoggingInterceptor.Level.NONE
+        }
+    }
+
+    private val okHttpClient = OkHttpClient.Builder()
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .readTimeout(30, TimeUnit.SECONDS)
+        .writeTimeout(30, TimeUnit.SECONDS)
+        .addInterceptor(loggingInterceptor)
+        .build()
+
     private val retrofit = Retrofit.Builder()
         .baseUrl(NetworkConfig.BASE_URL)
+        .client(okHttpClient)
         .addConverterFactory(
             json.asConverterFactory(
                 "application/json".toMediaType()
