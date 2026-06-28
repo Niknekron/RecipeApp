@@ -42,6 +42,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -74,4 +75,6 @@ dependencies {
     implementation(
         libs.retrofit.kotlinx.serialization.converter
     )
+    implementation(libs.okhttp.logging.interceptor)
+
 }

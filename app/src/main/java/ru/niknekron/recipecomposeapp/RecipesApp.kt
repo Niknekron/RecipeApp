@@ -168,9 +168,12 @@ fun RecipesApp(
                 ) { backStackEntry ->
                     val context = LocalContext.current
 
+                    val application = context.applicationContext as? Application
+                        ?: error("Application context is not an Application")
+
                     val recipeDetailsViewModel = remember(backStackEntry) {
                         RecipeDetailsViewModel(
-                            application = context.applicationContext as Application,
+                            application = application,
                             savedStateHandle = backStackEntry.savedStateHandle,
                             repository = recipesRepository
                         )
