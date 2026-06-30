@@ -1,8 +1,8 @@
 package ru.niknekron.recipecomposeapp.features.categories.presentation.model
 
 import androidx.compose.runtime.Immutable
-import ru.niknekron.recipecomposeapp.ASSETS_URI_PREFIX
 import ru.niknekron.recipecomposeapp.data.model.CategoryDto
+import ru.niknekron.recipecomposeapp.IMAGES_BASE_URL
 
 @Immutable
 data class CategoryUiModel(
@@ -20,7 +20,7 @@ fun CategoryDto.toUiModel(): CategoryUiModel {
         imageUrl = if (imageUrl.startsWith("http")) {
             imageUrl
         } else {
-            ASSETS_URI_PREFIX + imageUrl
+            IMAGES_BASE_URL + imageUrl
         }
     )
 }

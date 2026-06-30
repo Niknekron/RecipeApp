@@ -5,6 +5,7 @@ import androidx.compose.runtime.Immutable
 import kotlinx.parcelize.Parcelize
 import ru.niknekron.recipecomposeapp.ASSETS_URI_PREFIX
 import ru.niknekron.recipecomposeapp.data.model.RecipeDto
+import ru.niknekron.recipecomposeapp.IMAGES_BASE_URL
 
 @Parcelize
 @Immutable
@@ -24,7 +25,7 @@ fun RecipeDto.toUiModel(): RecipeUiModel {
         imageUrl = if (imageUrl.startsWith("http")) {
             imageUrl
         } else {
-            ASSETS_URI_PREFIX + imageUrl
+            IMAGES_BASE_URL + imageUrl
         },
         ingredients = ingredients.map { it.toUiModel() },
         method = method,

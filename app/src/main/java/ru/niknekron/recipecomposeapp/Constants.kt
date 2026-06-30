@@ -8,6 +8,8 @@ const val PARAM_CATEGORY_ID = "categoryId"
 const val PARAM_CATEGORY_TITLE = "categoryTitle"
 const val PARAM_CATEGORY_IMAGE_URL = "categoryImageUrl"
 
+const val IMAGES_BASE_URL = "https://recipes.androidsprint.ru/api/images/"
+
 fun createRecipeDeepLink(recipeId: Int): String {
     return "$DEEP_LINK_BASE_URL/recipe/$recipeId"
 }

@@ -17,6 +17,9 @@ import coil3.compose.AsyncImage
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.RecipeUiModel
 import ru.niknekron.recipecomposeapp.features.theme.Dimens
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.res.painterResource
+import ru.niknekron.recipecomposeapp.R
+import ru.niknekron.recipecomposeapp.core.ui.RecipeImage
 
 @Composable
 fun RecipeItem(
@@ -36,16 +39,18 @@ fun RecipeItem(
         )
     ) {
         Column {
-            AsyncImage(
-                model = recipe.imageUrl,
+            RecipeImage(
+                imageUrl = recipe.imageUrl,
                 contentDescription = recipe.title,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1.4f)
-                    .clip(RoundedCornerShape(
-                        topStart = Dimens.CornerMedium,
-                        topEnd = Dimens.CornerMedium
-                    )),
+                    .aspectRatio(1.2f)
+                    .clip(
+                        RoundedCornerShape(
+                            topStart = Dimens.CornerMedium,
+                            topEnd = Dimens.CornerMedium
+                        )
+                    ),
                 contentScale = ContentScale.Crop
             )
 

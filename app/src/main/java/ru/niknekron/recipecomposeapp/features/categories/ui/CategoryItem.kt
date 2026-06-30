@@ -1,27 +1,23 @@
 package ru.niknekron.recipecomposeapp.features.categories.ui
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
-
-import coil3.compose.SubcomposeAsyncImage
 import ru.niknekron.recipecomposeapp.features.categories.presentation.model.CategoryUiModel
 import ru.niknekron.recipecomposeapp.features.theme.Dimens
+import ru.niknekron.recipecomposeapp.core.ui.RecipeImage
+
 
 @Composable
 fun CategoryItem(
@@ -43,34 +39,19 @@ fun CategoryItem(
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
-            SubcomposeAsyncImage(
-                model = category.imageUrl,
+            RecipeImage(
+                imageUrl = category.imageUrl,
                 contentDescription = category.title,
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1.2f)
-                    .clip(RoundedCornerShape(topStart = Dimens.CornerMedium, topEnd = Dimens.CornerMedium)),
-                contentScale = ContentScale.Crop,
-                loading = {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1.2f),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(Dimens. IndicatorSize)
+                    .clip(
+                        RoundedCornerShape(
+                            topStart = Dimens.CornerMedium,
+                            topEnd = Dimens.CornerMedium
                         )
-                    }
-                },
-                error = {
-                    Text(
-                        text = "Image error",
-                        modifier = Modifier.padding(Dimens.PaddingMedium),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
+                    ),
+                contentScale = ContentScale.Crop
             )
 
             Column(
