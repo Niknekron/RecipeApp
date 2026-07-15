@@ -7,13 +7,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import ru.niknekron.recipecomposeapp.data.repository.RecipesRepository
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryStub
-import ru.niknekron.recipecomposeapp.features.favorites.presentation.model.FavoritesUiState
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiModel
 import ru.niknekron.recipecomposeapp.util.FavoriteDataStoreManager
 
 class FavoriteViewModel(
-    application: Application
+    application: Application,
+    private val repository: RecipesRepository,
 ) : AndroidViewModel(application) {
 
     private val favoriteDataStoreManager = FavoriteDataStoreManager(application)

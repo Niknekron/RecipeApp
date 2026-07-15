@@ -21,7 +21,7 @@ import kotlinx.coroutines.delay
 import ru.niknekron.recipecomposeapp.core.network.api.RecipesApiService
 import ru.niknekron.recipecomposeapp.core.ui.navigation.BottomNavigation
 import ru.niknekron.recipecomposeapp.core.ui.navigation.Destination
-import ru.niknekron.recipecomposeapp.data.repository.RecipesRepository
+import ru.niknekron.recipecomposeapp.data.database.RecipesDatabase
 import ru.niknekron.recipecomposeapp.features.categories.ui.CategoriesScreen
 import ru.niknekron.recipecomposeapp.features.details.presentation.model.RecipeDetailsViewModel
 import ru.niknekron.recipecomposeapp.features.details.ui.RecipeDetailsScreen
@@ -31,6 +31,8 @@ import ru.niknekron.recipecomposeapp.features.recipes.ui.RecipesScreen
 import ru.niknekron.recipecomposeapp.features.theme.RecipeComposeAppTheme
 import ru.niknekron.recipecomposeapp.util.FavoriteDataStoreManager
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepositoryImpl
+import ru.niknekron.recipecomposeapp.features.favorites.presentation.model.FavoriteViewModel
+
 @Composable
 fun RecipesApp(
     deepLinkIntent: Intent? = null,
@@ -38,8 +40,17 @@ fun RecipesApp(
 ){
     val navController = rememberNavController()
     val context = LocalContext.current
-    val recipesRepository = remember {
-        RecipesRepositoryImpl(apiService)
+    val database = remember {
+        RecipesDatabase.buildDatabase(context)
+    }
+    val recipesRepository = remember(
+        apiService,
+        database,
+    ) {
+        RecipesRepositoryImpl(
+            apiService = apiService,
+            database = database
+        )
     }
 
     val favoriteDataStoreManager = remember {
@@ -117,8 +128,24 @@ fun RecipesApp(
                     )
                 }
 
-                composable(route = Destination.Favorites.route) {
+                composable(
+                    route = Destination.Favorites.route
+                ) { backStackEntry ->
+                    val application = context.applicationContext as? Application
+                        ?: error("Application context is not an Application")
+
+                    val favoritesViewModel: FavoriteViewModel = remember(
+                        backStackEntry,
+                        recipesRepository
+                    ) {
+                        FavoriteViewModel (
+                            application = application,
+                            repository = recipesRepository
+                        )
+                    }
+
                     FavoritesScreen(
+                        viewModel = favoritesViewModel,
                         onRecipeClick = { recipeId ->
                             navController.navigate(
                                 Destination.RecipeDetails.createRoute(recipeId)

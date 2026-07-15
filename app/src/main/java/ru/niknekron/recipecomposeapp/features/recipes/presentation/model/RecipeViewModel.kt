@@ -15,7 +15,6 @@ import ru.niknekron.recipecomposeapp.PARAM_CATEGORY_TITLE
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.RecipeUiState
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiModel
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepository
-
 class RecipesViewModel(
     savedStateHandle: SavedStateHandle,
     private val repository: RecipesRepository,
@@ -57,19 +56,21 @@ class RecipesViewModel(
             }
 
             try {
-                val recipes = repository
+                repository
                     .getRecipesByCategory(categoryId)
-                    .map { recipeDto ->
-                        recipeDto.toUiModel()
-                    }
+                    .collect { recipeDtos ->
+                        val recipes = recipeDtos.map { recipeDto ->
+                            recipeDto.toUiModel()
+                        }
 
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        recipes = recipes,
-                        isLoading = false,
-                        error = null
-                    )
-                }
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                recipes = recipes,
+                                isLoading = false,
+                                error = null
+                            )
+                        }
+                    }
             } catch (exception: Exception) {
                 _uiState.update { currentState ->
                     currentState.copy(
