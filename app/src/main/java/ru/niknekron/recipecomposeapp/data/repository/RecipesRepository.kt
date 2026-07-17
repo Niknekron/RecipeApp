@@ -2,15 +2,20 @@ package ru.niknekron.recipecomposeapp.data.repository
 
 import ru.niknekron.recipecomposeapp.data.model.CategoryDto
 import ru.niknekron.recipecomposeapp.data.model.RecipeDto
+import kotlinx.coroutines.flow.Flow
 
 interface RecipesRepository {
-    suspend fun getCategories(): List<CategoryDto>
+    fun getCategories(): Flow<List<CategoryDto>>
 
-    suspend fun getRecipesByCategory(
+    fun getRecipesByCategory(
         categoryId: Int
-    ): List<RecipeDto>
+    ): Flow<List<RecipeDto>>
 
     suspend fun getRecipe(
         recipeId: Int
     ): RecipeDto?
+
+    fun getRecipesByIds(
+        ids: List<Int>
+    ): Flow<List<RecipeDto>>
 }
