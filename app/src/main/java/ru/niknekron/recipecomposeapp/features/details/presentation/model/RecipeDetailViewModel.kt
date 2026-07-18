@@ -15,6 +15,7 @@ import ru.niknekron.recipecomposeapp.PARAM_RECIPE_ID
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiModel
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepository
 
+
 class RecipeDetailsViewModel(
     application: Application,
     savedStateHandle: SavedStateHandle,
@@ -32,23 +33,11 @@ class RecipeDetailsViewModel(
     private var favoriteJob: Job? = null
 
     init {
-        loadRecipe(recipeId)
+        observeRecipe()
         observeFavorite(recipeId)
     }
 
-//    fun initializeWithRecipe(recipe: RecipeUiModel) {
-//        _uiState.update { currentState ->
-//            currentState.copy(
-//                recipe = recipe,
-//                isLoading = false,
-//                error = null
-//            )
-//        }
-//
-//        observeFavorite(recipe.id)
-//    }
-
-    private fun loadRecipe(recipeId: Int) {
+    private fun observeRecipe() {
         viewModelScope.launch {
             _uiState.update { currentState ->
                 currentState.copy(
@@ -58,26 +47,33 @@ class RecipeDetailsViewModel(
             }
 
             try {
-                val recipe = repository
+                repository
                     .getRecipe(recipeId)
-                    ?.toUiModel()
-
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        recipe = recipe,
-                        isLoading = false,
-                        error = if (recipe == null) {
-                            "Рецепт не найден"
+                    .collect { recipeDto ->
+                        if (recipeDto == null) {
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    recipe = null,
+                                    isLoading = true,
+                                    error = null
+                                )
+                            }
                         } else {
-                            null
+                            _uiState.update { currentState ->
+                                currentState.copy(
+                                    recipe = recipeDto.toUiModel(),
+                                    isLoading = false,
+                                    error = null
+                                )
+                            }
                         }
-                    )
-                }
+                    }
             } catch (exception: Exception) {
                 _uiState.update { currentState ->
                     currentState.copy(
                         isLoading = false,
-                        error = exception.message ?: "Ошибка загрузки рецепта"
+                        error = exception.message
+                            ?: "Ошибка загрузки рецепта"
                     )
                 }
             }
@@ -114,11 +110,9 @@ class RecipeDetailsViewModel(
     }
 
     fun updatePortions(portionsCount: Int) {
-        val safePortionsCount = portionsCount.coerceAtLeast(1)
-
         _uiState.update { currentState ->
             currentState.copy(
-                portionsCount = safePortionsCount
+                portionsCount = portionsCount.coerceAtLeast(1)
             )
         }
     }
