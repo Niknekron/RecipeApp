@@ -16,8 +16,7 @@ import kotlinx.coroutines.launch
 import ru.niknekron.recipecomposeapp.data.model.toDto
 import ru.niknekron.recipecomposeapp.data.model.toEntity
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
-import ru.niknekron.recipecomposeapp.data.model.toDto
+
 
 class RecipesRepositoryImpl(
     private val apiService: RecipesApiService,
@@ -103,22 +102,31 @@ class RecipesRepositoryImpl(
     }
 
 
-    override suspend fun getRecipe(
+    override fun getRecipe(
         recipeId: Int
-    ): RecipeDto? {
-        return withContext(Dispatchers.IO) {
+    ): Flow<RecipeDto?> {
+        CoroutineScope(Dispatchers.IO).launch {
             try {
-                apiService.getRecipe(recipeId)
+                val freshRecipe = apiService.getRecipe(recipeId)
+
+                Log.d(
+                    TAG,
+                    "Детали рецепта $recipeId получены из API: ${freshRecipe.title}"
+                )
             } catch (exception: Exception) {
                 Log.e(
                     TAG,
-                    "Ошибка при загрузке рецепта $recipeId",
+                    "Ошибка обновления рецепта $recipeId",
                     exception
                 )
-
-                null
             }
         }
+
+        return recipeDao
+            .getRecipeById(recipeId)
+            .map { recipeEntity ->
+                recipeEntity?.toDto()
+            }
     }
 
     override fun getRecipesByIds(
