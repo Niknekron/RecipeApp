@@ -74,8 +74,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             RecipesApp(
-                deepLinkIntent = deepLinkIntent,
-                apiService = apiService
+                deepLinkIntent = deepLinkIntent
             )
         }
     }

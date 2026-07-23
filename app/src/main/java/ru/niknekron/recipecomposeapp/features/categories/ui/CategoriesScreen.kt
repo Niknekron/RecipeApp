@@ -15,19 +15,25 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import ru.niknekron.recipecomposeapp.features.categories.presentation.model.CategoriesViewModel
 import ru.niknekron.recipecomposeapp.features.theme.Dimens
 import androidx.compose.runtime.remember
-import ru.niknekron.recipecomposeapp.data.repository.RecipesRepository
+import androidx.compose.ui.platform.LocalContext
+import ru.niknekron.recipecomposeapp.app.di.CategoriesViewModelFactory
+import ru.niknekron.recipecomposeapp.app.di.RecipeApplication
 
 @Composable
 fun CategoriesScreen(
-    repository: RecipesRepository,
     onCategoryClick: (Int, String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val appContainer =
+        (LocalContext.current.applicationContext as RecipeApplication)
+            .appContainer
+
     val viewModel = remember {
-        CategoriesViewModel(repository)
+        CategoriesViewModelFactory(
+            repository = appContainer.recipesRepository
+        ).create()
     }
 
     val uiState by viewModel.uiState.collectAsState()
