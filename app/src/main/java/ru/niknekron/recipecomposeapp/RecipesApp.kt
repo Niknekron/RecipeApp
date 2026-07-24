@@ -1,6 +1,5 @@
 package ru.niknekron.recipecomposeapp
 
-import android.app.Application
 import android.content.Intent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -22,18 +21,15 @@ import kotlinx.coroutines.delay
 import ru.niknekron.recipecomposeapp.app.di.FavoritesViewModelFactory
 import ru.niknekron.recipecomposeapp.app.di.RecipeApplication
 import ru.niknekron.recipecomposeapp.app.di.RecipeDetailsViewModelFactory
-import ru.niknekron.recipecomposeapp.core.network.api.RecipesApiService
 import ru.niknekron.recipecomposeapp.core.ui.navigation.BottomNavigation
 import ru.niknekron.recipecomposeapp.core.ui.navigation.Destination
 import ru.niknekron.recipecomposeapp.features.categories.ui.CategoriesScreen
-import ru.niknekron.recipecomposeapp.features.details.presentation.model.RecipeDetailsViewModel
 import ru.niknekron.recipecomposeapp.features.details.ui.RecipeDetailsScreen
 import ru.niknekron.recipecomposeapp.features.favorites.ui.FavoritesScreen
-import ru.niknekron.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 import ru.niknekron.recipecomposeapp.features.recipes.ui.RecipesScreen
 import ru.niknekron.recipecomposeapp.features.theme.RecipeComposeAppTheme
 import ru.niknekron.recipecomposeapp.util.FavoriteDataStoreManager
-import ru.niknekron.recipecomposeapp.features.favorites.presentation.model.FavoritesViewModel
+import ru.niknekron.recipecomposeapp.features.favorites.presentation.model.FavoriteViewModel
 import ru.niknekron.recipecomposeapp.app.di.RecipesViewModelFactory
 
 @Composable
@@ -52,7 +48,8 @@ fun RecipesApp(
         .collectAsState(initial = 0)
 
     val application =
-        LocalContext.current.applicationContext as RecipeApplication
+        LocalContext.current.applicationContext as? RecipeApplication
+            ?: error("Application is not RecipeApplication")
 
     val appContainer = application.appContainer
 
@@ -125,7 +122,8 @@ fun RecipesApp(
                 composable(
                     route = Destination.Favorites.route
                 ) { backStackEntry ->
-                    val favoritesViewModel = remember(backStackEntry) {
+
+                    val favoriteViewModel = remember(backStackEntry) {
                         FavoritesViewModelFactory(
                             application = application,
                             repository = appContainer.recipesRepository
@@ -133,7 +131,7 @@ fun RecipesApp(
                     }
 
                     FavoritesScreen(
-                        viewModel = favoritesViewModel,
+                        viewModel = favoriteViewModel,
                         onRecipeClick = { recipeId ->
                             navController.navigate(
                                 Destination.RecipeDetails.createRoute(recipeId)
