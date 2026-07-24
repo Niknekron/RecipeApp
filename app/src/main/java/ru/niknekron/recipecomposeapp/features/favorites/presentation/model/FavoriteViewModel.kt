@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -40,6 +41,15 @@ class FavoriteViewModel(
                 },
                 isLoading = false,
                 error = null
+            )
+        }
+        .catch { exception ->
+            emit(
+                FavoritesUiState(
+                    recipes = emptyList(),
+                    isLoading = false,
+                    error = exception.message ?: "Ошибка загрузки избранного"
+                )
             )
         }
         .stateIn(

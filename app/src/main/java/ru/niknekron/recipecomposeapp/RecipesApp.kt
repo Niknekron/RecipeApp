@@ -154,10 +154,12 @@ fun RecipesApp(
                         }
                     )
                 ) { backStackEntry ->
-                    val savedStateHandle = SavedStateHandle().apply {
-                        backStackEntry.arguments?.let { bundle ->
-                            bundle.keySet().forEach { key ->
-                                set(key, bundle.get(key))
+                    val savedStateHandle = remember(backStackEntry) {
+                        SavedStateHandle().apply {
+                            backStackEntry.arguments?.let { bundle ->
+                                bundle.keySet().forEach { key ->
+                                    set(key, bundle.get(key))
+                                }
                             }
                         }
                     }
@@ -187,10 +189,12 @@ fun RecipesApp(
                         }
                     )
                 ) { backStackEntry ->
-                    val savedStateHandle = SavedStateHandle().apply {
-                        backStackEntry.arguments?.let { bundle ->
-                            bundle.keySet().forEach { key ->
-                                set(key, bundle.get(key))
+                    val savedStateHandle = remember(backStackEntry) {
+                        SavedStateHandle().apply {
+                            backStackEntry.arguments?.let { bundle ->
+                                bundle.keySet().forEach { key ->
+                                    set(key, bundle.get(key))
+                                }
                             }
                         }
                     }
