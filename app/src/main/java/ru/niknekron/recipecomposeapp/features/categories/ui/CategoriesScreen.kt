@@ -26,9 +26,11 @@ fun CategoriesScreen(
     onCategoryClick: (Int, String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val appContainer =
-        (LocalContext.current.applicationContext as RecipeApplication)
-            .appContainer
+    val application =
+        LocalContext.current.applicationContext as? RecipeApplication
+            ?: error("Application is not RecipeApplication")
+
+    val appContainer = application.appContainer
 
     val viewModel = remember {
         CategoriesViewModelFactory(

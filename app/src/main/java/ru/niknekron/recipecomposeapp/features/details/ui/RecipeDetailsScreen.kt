@@ -13,7 +13,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.rememberAsyncImagePainter
 import ru.niknekron.recipecomposeapp.core.ui.ScreenHeader
 import ru.niknekron.recipecomposeapp.features.details.presentation.model.RecipeDetailsViewModel
@@ -22,9 +21,9 @@ import ru.niknekron.recipecomposeapp.utils.shareRecipe
 
 @Composable
 fun RecipeDetailsScreen(
+    viewModel: RecipeDetailsViewModel,
     modifier: Modifier = Modifier,
-    viewModel: RecipeDetailsViewModel = viewModel(),
-) {
+){
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsState()
 
