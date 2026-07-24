@@ -14,17 +14,17 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.rememberAsyncImagePainter
 import ru.niknekron.recipecomposeapp.core.ui.ScreenHeader
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 import ru.niknekron.recipecomposeapp.features.theme.Dimens
 
+
 @Composable
 fun RecipesScreen(
+    viewModel: RecipesViewModel,
     onRecipeClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: RecipesViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

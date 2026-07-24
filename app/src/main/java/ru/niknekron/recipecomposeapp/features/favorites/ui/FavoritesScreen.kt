@@ -14,16 +14,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import ru.niknekron.recipecomposeapp.features.favorites.presentation.model.FavoriteViewModel
 import ru.niknekron.recipecomposeapp.features.recipes.ui.RecipeItem
 import ru.niknekron.recipecomposeapp.features.theme.Dimens
 
 @Composable
 fun FavoritesScreen(
+    viewModel: FavoriteViewModel,
     onRecipeClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: FavoriteViewModel = viewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
