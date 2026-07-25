@@ -16,9 +16,10 @@ import kotlinx.coroutines.launch
 import ru.niknekron.recipecomposeapp.data.model.toDto
 import ru.niknekron.recipecomposeapp.data.model.toEntity
 import kotlinx.coroutines.flow.flowOf
+import javax.inject.Inject
 
 
-class RecipesRepositoryImpl(
+class RecipesRepositoryImpl @Inject constructor(
     private val apiService: RecipesApiService,
     database: RecipesDatabase,
 ) : RecipesRepository {

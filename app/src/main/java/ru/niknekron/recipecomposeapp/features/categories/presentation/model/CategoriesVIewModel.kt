@@ -5,14 +5,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepository
-import ru.niknekron.recipecomposeapp.features.categories.presentation.model.CategoriesUiState
-import ru.niknekron.recipecomposeapp.features.categories.presentation.model.toUiModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class CategoriesViewModel(
+@HiltViewModel
+class CategoriesViewModel @Inject constructor(
     private val repository: RecipesRepository,
 ) : ViewModel() {
 
