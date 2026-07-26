@@ -12,7 +12,9 @@ import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiMod
 import ru.niknekron.recipecomposeapp.util.FavoriteDataStoreManager
 import androidx.lifecycle.ViewModel
 import javax.inject.Inject
+import dagger.hilt.android.lifecycle.HiltViewModel
 
+@HiltViewModel
 class FavoriteViewModel @Inject constructor(
     private val repository: RecipesRepository,
     private val favoriteDataStoreManager: FavoriteDataStoreManager,
