@@ -8,50 +8,36 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import kotlinx.coroutines.delay
-import ru.niknekron.recipecomposeapp.app.di.FavoritesViewModelFactory
-import ru.niknekron.recipecomposeapp.app.di.RecipeApplication
-import ru.niknekron.recipecomposeapp.app.di.RecipeDetailsViewModelFactory
 import ru.niknekron.recipecomposeapp.core.ui.navigation.BottomNavigation
 import ru.niknekron.recipecomposeapp.core.ui.navigation.Destination
 import ru.niknekron.recipecomposeapp.features.categories.ui.CategoriesScreen
 import ru.niknekron.recipecomposeapp.features.details.ui.RecipeDetailsScreen
+import ru.niknekron.recipecomposeapp.features.favorites.presentation.model.FavoriteViewModel
 import ru.niknekron.recipecomposeapp.features.favorites.ui.FavoritesScreen
 import ru.niknekron.recipecomposeapp.features.recipes.ui.RecipesScreen
 import ru.niknekron.recipecomposeapp.features.theme.RecipeComposeAppTheme
-import ru.niknekron.recipecomposeapp.util.FavoriteDataStoreManager
-import ru.niknekron.recipecomposeapp.features.favorites.presentation.model.FavoriteViewModel
-import ru.niknekron.recipecomposeapp.app.di.RecipesViewModelFactory
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import ru.niknekron.recipecomposeapp.features.details.presentation.model.RecipeDetailsViewModel
+import ru.niknekron.recipecomposeapp.features.recipes.presentation.RecipesViewModel
 
 @Composable
 fun RecipesApp(
     deepLinkIntent: Intent? = null,
 ){
     val navController = rememberNavController()
-    val context = LocalContext.current
+    val favoriteViewModel: FavoriteViewModel = hiltViewModel()
 
-    val favoriteDataStoreManager = remember {
-        FavoriteDataStoreManager(context)
-    }
+    val favoriteCount by favoriteViewModel
+        .favoriteCount
+        .collectAsState()
 
-    val favoriteCount by favoriteDataStoreManager
-        .getFavoriteCountFlow()
-        .collectAsState(initial = 0)
-
-    val application =
-        LocalContext.current.applicationContext as? RecipeApplication
-            ?: error("Application is not RecipeApplication")
-
-    val appContainer = application.appContainer
 
     LaunchedEffect(deepLinkIntent) {
         deepLinkIntent?.data?.let { uri ->
@@ -123,12 +109,8 @@ fun RecipesApp(
                     route = Destination.Favorites.route
                 ) { backStackEntry ->
 
-                    val favoriteViewModel = remember(backStackEntry) {
-                        FavoritesViewModelFactory(
-                            application = application,
-                            repository = appContainer.recipesRepository
-                        ).create()
-                    }
+                    val favoriteViewModel: FavoriteViewModel =
+                        hiltViewModel(backStackEntry)
 
                     FavoritesScreen(
                         viewModel = favoriteViewModel,
@@ -154,22 +136,8 @@ fun RecipesApp(
                         }
                     )
                 ) { backStackEntry ->
-                    val savedStateHandle = remember(backStackEntry) {
-                        SavedStateHandle().apply {
-                            backStackEntry.arguments?.let { bundle ->
-                                bundle.keySet().forEach { key ->
-                                    set(key, bundle.get(key))
-                                }
-                            }
-                        }
-                    }
-
-                    val recipesViewModel = remember(backStackEntry) {
-                        RecipesViewModelFactory(
-                            savedStateHandle = savedStateHandle,
-                            repository = appContainer.recipesRepository
-                        ).create()
-                    }
+                    val recipesViewModel: RecipesViewModel =
+                        hiltViewModel(backStackEntry)
 
                     RecipesScreen(
                         viewModel = recipesViewModel,
@@ -189,23 +157,8 @@ fun RecipesApp(
                         }
                     )
                 ) { backStackEntry ->
-                    val savedStateHandle = remember(backStackEntry) {
-                        SavedStateHandle().apply {
-                            backStackEntry.arguments?.let { bundle ->
-                                bundle.keySet().forEach { key ->
-                                    set(key, bundle.get(key))
-                                }
-                            }
-                        }
-                    }
-
-                    val recipeDetailsViewModel = remember(backStackEntry) {
-                        RecipeDetailsViewModelFactory(
-                            application = application,
-                            savedStateHandle = savedStateHandle,
-                            repository = appContainer.recipesRepository
-                        ).create()
-                    }
+                    val recipeDetailsViewModel: RecipeDetailsViewModel =
+                        hiltViewModel(backStackEntry)
 
                     RecipeDetailsScreen(
                         viewModel = recipeDetailsViewModel

@@ -1,8 +1,7 @@
 package ru.niknekron.recipecomposeapp.features.details.presentation.model
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,18 +13,20 @@ import ru.niknekron.recipecomposeapp.util.FavoriteDataStoreManager
 import ru.niknekron.recipecomposeapp.PARAM_RECIPE_ID
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiModel
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 
-class RecipeDetailsViewModel(
-    application: Application,
+
+@HiltViewModel
+class RecipeDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: RecipesRepository,
-) : AndroidViewModel(application) {
+    private val favoriteDataStoreManager: FavoriteDataStoreManager,
+) : ViewModel() {
 
     private val recipeId: Int =
         savedStateHandle[PARAM_RECIPE_ID] ?: 0
-
-    private val favoriteDataStoreManager = FavoriteDataStoreManager(application)
 
     private val _uiState = MutableStateFlow(RecipeDetailUiState())
     val uiState: StateFlow<RecipeDetailUiState> = _uiState.asStateFlow()

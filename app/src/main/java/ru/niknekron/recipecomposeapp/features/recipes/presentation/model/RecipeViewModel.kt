@@ -15,7 +15,11 @@ import ru.niknekron.recipecomposeapp.PARAM_CATEGORY_TITLE
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.RecipeUiState
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiModel
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepository
-class RecipesViewModel(
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class RecipesViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: RecipesRepository,
 ) : ViewModel() {

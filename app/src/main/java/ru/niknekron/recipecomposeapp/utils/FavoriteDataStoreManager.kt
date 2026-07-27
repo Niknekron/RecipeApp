@@ -5,9 +5,13 @@ import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class FavoriteDataStoreManager(
-    private val context: Context,
+@Singleton
+class FavoriteDataStoreManager @Inject constructor(
+    @ApplicationContext private val context: Context,
 ) {
     suspend fun isFavorite(recipeId: Int): Boolean {
         val preferences = context.dataStore.data.first()

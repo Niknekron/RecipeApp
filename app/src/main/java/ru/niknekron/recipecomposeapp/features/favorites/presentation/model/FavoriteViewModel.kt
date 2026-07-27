@@ -1,9 +1,6 @@
 package ru.niknekron.recipecomposeapp.features.favorites.presentation.model
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -12,14 +9,26 @@ import kotlinx.coroutines.flow.stateIn
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepository
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiModel
 import ru.niknekron.recipecomposeapp.util.FavoriteDataStoreManager
+import androidx.lifecycle.ViewModel
+import javax.inject.Inject
+import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 
-class FavoriteViewModel(
-    application: Application,
+@HiltViewModel
+class FavoriteViewModel @Inject constructor(
     private val repository: RecipesRepository,
-) : AndroidViewModel(application) {
+    private val favoriteDataStoreManager: FavoriteDataStoreManager,
+) : ViewModel() {
 
-    private val favoriteDataStoreManager =
-        FavoriteDataStoreManager(application)
+    val favoriteCount = favoriteDataStoreManager
+        .getFavoriteCountFlow()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = 0
+        )
 
     val uiState = favoriteDataStoreManager
         .getFavoriteIdsFlow()
