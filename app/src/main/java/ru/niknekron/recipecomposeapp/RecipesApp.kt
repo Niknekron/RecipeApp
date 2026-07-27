@@ -8,10 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,7 +23,6 @@ import ru.niknekron.recipecomposeapp.features.favorites.presentation.model.Favor
 import ru.niknekron.recipecomposeapp.features.favorites.ui.FavoritesScreen
 import ru.niknekron.recipecomposeapp.features.recipes.ui.RecipesScreen
 import ru.niknekron.recipecomposeapp.features.theme.RecipeComposeAppTheme
-import ru.niknekron.recipecomposeapp.util.FavoriteDataStoreManager
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import ru.niknekron.recipecomposeapp.features.details.presentation.model.RecipeDetailsViewModel
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.RecipesViewModel
@@ -36,15 +32,11 @@ fun RecipesApp(
     deepLinkIntent: Intent? = null,
 ){
     val navController = rememberNavController()
-    val context = LocalContext.current
+    val favoriteViewModel: FavoriteViewModel = hiltViewModel()
 
-    val favoriteDataStoreManager = remember {
-        FavoriteDataStoreManager(context)
-    }
-
-    val favoriteCount by favoriteDataStoreManager
-        .getFavoriteCountFlow()
-        .collectAsState(initial = 0)
+    val favoriteCount by favoriteViewModel
+        .favoriteCount
+        .collectAsState()
 
 
     LaunchedEffect(deepLinkIntent) {
@@ -144,16 +136,6 @@ fun RecipesApp(
                         }
                     )
                 ) { backStackEntry ->
-                    val savedStateHandle = remember(backStackEntry) {
-                        SavedStateHandle().apply {
-                            backStackEntry.arguments?.let { bundle ->
-                                bundle.keySet().forEach { key ->
-                                    set(key, bundle.get(key))
-                                }
-                            }
-                        }
-                    }
-
                     val recipesViewModel: RecipesViewModel =
                         hiltViewModel(backStackEntry)
 
@@ -175,16 +157,6 @@ fun RecipesApp(
                         }
                     )
                 ) { backStackEntry ->
-                    val savedStateHandle = remember(backStackEntry) {
-                        SavedStateHandle().apply {
-                            backStackEntry.arguments?.let { bundle ->
-                                bundle.keySet().forEach { key ->
-                                    set(key, bundle.get(key))
-                                }
-                            }
-                        }
-                    }
-
                     val recipeDetailsViewModel: RecipeDetailsViewModel =
                         hiltViewModel(backStackEntry)
 
