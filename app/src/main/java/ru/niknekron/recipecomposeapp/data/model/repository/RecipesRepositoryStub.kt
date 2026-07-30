@@ -4,6 +4,7 @@ import ru.niknekron.recipecomposeapp.data.model.CategoryDto
 import ru.niknekron.recipecomposeapp.data.model.IngredientDto
 import ru.niknekron.recipecomposeapp.data.model.RecipeDto
 
+object RecipesRepositoryStub {
     private val categories = listOf(
         CategoryDto(
             id = 0,
@@ -149,37 +150,38 @@ import ru.niknekron.recipecomposeapp.data.model.RecipeDto
         )
     )
 
-private val dessertRecipes = emptyList<RecipeDto>()
-private val pizzaRecipes = emptyList<RecipeDto>()
-private val fishRecipes = emptyList<RecipeDto>()
-private val soupRecipes = emptyList<RecipeDto>()
-private val saladRecipes = emptyList<RecipeDto>()
+    private val dessertRecipes = emptyList<RecipeDto>()
+    private val pizzaRecipes = emptyList<RecipeDto>()
+    private val fishRecipes = emptyList<RecipeDto>()
+    private val soupRecipes = emptyList<RecipeDto>()
+    private val saladRecipes = emptyList<RecipeDto>()
 
-fun getCategories(): List<CategoryDto> {
+    fun getCategories(): List<CategoryDto> {
         return categories
     }
 
-fun getRecipesByCategoryId(categoryId: Int): List<RecipeDto> {
-    return when (categoryId) {
-        0 -> burgerRecipes
-        1 -> dessertRecipes
-        2 -> pizzaRecipes
-        3 -> fishRecipes
-        4 -> soupRecipes
-        5 -> saladRecipes
-        else -> emptyList()
+    fun getRecipesByCategoryId(categoryId: Int): List<RecipeDto> {
+        return when (categoryId) {
+            0 -> burgerRecipes
+            1 -> dessertRecipes
+            2 -> pizzaRecipes
+            3 -> fishRecipes
+            4 -> soupRecipes
+            5 -> saladRecipes
+            else -> emptyList()
+        }
     }
-}
 
-fun getRecipeById(recipeId: Int): RecipeDto? {
-    return listOf(
-        burgerRecipes,
-        dessertRecipes,
-        pizzaRecipes,
-        fishRecipes,
-        soupRecipes,
-        saladRecipes
-    ).flatten().find { recipe ->
-        recipe.id == recipeId
+    fun getRecipeById(recipeId: Int): RecipeDto? {
+        return listOf(
+            burgerRecipes,
+            dessertRecipes,
+            pizzaRecipes,
+            fishRecipes,
+            soupRecipes,
+            saladRecipes
+        ).flatten().find { recipe ->
+            recipe.id == recipeId
+        }
     }
 }
