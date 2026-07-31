@@ -18,6 +18,7 @@ import ru.niknekron.recipecomposeapp.data.database.dao.CategoryDao
 import ru.niknekron.recipecomposeapp.data.database.dao.RecipeDao
 import ru.niknekron.recipecomposeapp.data.database.entity.CategoryEntity
 import ru.niknekron.recipecomposeapp.data.database.entity.RecipeEntity
+import java.io.IOException
 
 class RecipesRepositoryTest {
     private lateinit var apiService: RecipesApiService
@@ -115,7 +116,7 @@ class RecipesRepositoryTest {
 
         coEvery {
             apiService.getCategories()
-        } throws IllegalStateException("Network error")
+        } throws IOException("Network error")
 
         coEvery {
             categoryDao.insertCategories(any())
@@ -125,13 +126,11 @@ class RecipesRepositoryTest {
         repository.getCategories().test {
             val result = awaitItem()
 
-            assertEquals(1, result.size)
-            assertEquals(2, result.first().id)
-            assertEquals("Десерты", result.first().title)
-            assertEquals(
-                "Сладкие блюда",
-                result.first().description
-            )
+            assertEquals(cachedCategories.size, result.size)
+            assertEquals(cachedCategories.first().id, result.first().id)
+            assertEquals(cachedCategories.first().name, result.first().title)
+            assertEquals(cachedCategories.first().description, result.first().description)
+            assertEquals(cachedCategories.first().imageUrl, result.first().imageUrl)
 
             cancelAndIgnoreRemainingEvents()
         }

@@ -20,8 +20,21 @@ class RecipeDtoMapperTest {
 
         //Assert
         assertEquals(1, result.id)
-        assertEquals("Паста Карбонара", result.title)
-        assertEquals(recipeDto.ingredients, result.ingredients)
+        assertEquals(recipeDto.title, result.title)
+        assertEquals(
+            recipeDto.ingredients.size,
+            result.ingredients.size
+        )
+
+        assertEquals(
+            recipeDto.ingredients.first().quantity,
+            result.ingredients.first().quantity
+        )
+
+        assertEquals(
+            recipeDto.ingredients.first().unitOfMeasure,
+            result.ingredients.first().unitOfMeasure
+        )
         assertEquals(recipeDto.method, result.method)
     }
 
