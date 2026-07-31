@@ -5,29 +5,24 @@ import org.junit.Test
 import ru.niknekron.recipecomposeapp.features.categories.presentation.model.toUiModel
 import ru.niknekron.recipecomposeapp.fixtures.CategoryTestFixtures
 
-class CategoryDtoTest  {
+class CategoryDtoTest {
+
     @Test
     fun `converts DTO to UI model`() {
-        //Arrange
-        val categoryDto = CategoryDto(
-            id = 1,
-            title = "Завтраки",
-            description = "Утренние блюда",
-            imageUrl = "breakfast.jpg",
-        )
+        // Arrange
+        val categoryDto = CategoryTestFixtures.createCategoryDto()
 
-        //Act
+        // Act
         val result = categoryDto.toUiModel()
 
-        //Assert
-        assertEquals(1, result.id)
-        assertEquals("Завтраки", result.title)
-        assertEquals("Утренние блюда", result.description)
+        // Assert
+        assertEquals(categoryDto.id, result.id)
+        assertEquals(categoryDto.title, result.title)
+        assertEquals(categoryDto.description, result.description)
         assertEquals(
-            "https://recipes.androidsprint.ru/api/images/breakfast.jpg",
+            "https://recipes.androidsprint.ru/api/images/${categoryDto.imageUrl}",
             result.imageUrl
         )
-
     }
 
     @Test
@@ -41,12 +36,11 @@ class CategoryDtoTest  {
         val result = dto.toUiModel()
 
         // Assert
-        assertEquals("", result.title)
+        assertEquals(dto.title, result.title)
     }
 
     @Test
     fun `mapper preserves very long description`() {
-
         // Arrange
         val description = "Описание".repeat(100)
 
@@ -58,6 +52,6 @@ class CategoryDtoTest  {
         val result = dto.toUiModel()
 
         // Assert
-        assertEquals(description, result.description)
+        assertEquals(dto.description, result.description)
     }
 }
