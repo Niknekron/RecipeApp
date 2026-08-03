@@ -17,7 +17,9 @@ import androidx.compose.ui.Modifier
 import coil3.compose.rememberAsyncImagePainter
 import ru.niknekron.recipecomposeapp.core.ui.ScreenHeader
 import ru.niknekron.recipecomposeapp.features.recipes.presentation.RecipesViewModel
+import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.RecipeUiState
 import ru.niknekron.recipecomposeapp.features.theme.Dimens
+import androidx.compose.ui.platform.testTag
 
 
 @Composable
@@ -28,6 +30,18 @@ fun RecipesScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    RecipesContent(
+        uiState = uiState,
+        onRecipeClick = onRecipeClick,
+        modifier = modifier
+    )
+}
+@Composable
+fun RecipesContent(
+    uiState: RecipeUiState,
+    onRecipeClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     when {
         uiState.isLoading -> {
             Box(

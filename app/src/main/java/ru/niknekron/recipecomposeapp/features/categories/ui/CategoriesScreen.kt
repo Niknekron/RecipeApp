@@ -19,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import ru.niknekron.recipecomposeapp.features.categories.presentation.model.CategoriesViewModel
 import ru.niknekron.recipecomposeapp.features.theme.Dimens
+import ru.niknekron.recipecomposeapp.features.categories.presentation.model.CategoriesUiState
+import androidx.compose.ui.platform.testTag
 
 @Composable
 fun CategoriesScreen(
@@ -29,6 +31,19 @@ fun CategoriesScreen(
 
     val uiState by viewModel.uiState.collectAsState()
 
+    CategoriesContent(
+        uiState = uiState,
+        onCategoryClick = onCategoryClick,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun CategoriesContent(
+    uiState: CategoriesUiState,
+    onCategoryClick: (Int, String, String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     when {
         uiState.isLoading -> {
             Box(
