@@ -21,7 +21,6 @@ import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.RecipeU
 import ru.niknekron.recipecomposeapp.features.theme.Dimens
 import androidx.compose.ui.platform.testTag
 
-
 @Composable
 fun RecipesScreen(
     viewModel: RecipesViewModel,
@@ -48,7 +47,9 @@ fun RecipesContent(
                 modifier = modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    modifier = Modifier.testTag("loading_indicator")
+                )
             }
         }
 
@@ -59,21 +60,9 @@ fun RecipesContent(
             ) {
                 Text(
                     text = uiState.error.orEmpty(),
+                    modifier = Modifier.testTag("error_message"),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.error
-                )
-            }
-        }
-
-        uiState.isEmpty -> {
-            Box(
-                modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "В этой категории пока нет рецептов",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
         }

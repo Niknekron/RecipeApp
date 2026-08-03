@@ -5,14 +5,17 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import ru.niknekron.recipecomposeapp.features.categories.presentation.model.CategoriesUiState
 import ru.niknekron.recipecomposeapp.features.categories.presentation.model.CategoryUiModel
 import ru.niknekron.recipecomposeapp.features.theme.RecipeComposeAppTheme
 
-class CategoriesContentTest  {
+@RunWith(AndroidJUnit4::class)
+class CategoriesScreenTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
@@ -107,7 +110,7 @@ class CategoriesContentTest  {
 
         //Assert
         composeTestRule
-            .onNodeWithText("loading_indicator")
+            .onNodeWithTag("loading_indicator")
             .assertIsDisplayed()
     }
 }
