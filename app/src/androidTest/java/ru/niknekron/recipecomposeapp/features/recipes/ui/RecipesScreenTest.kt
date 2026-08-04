@@ -122,9 +122,8 @@ class RecipesScreenTest {
         }
 
         // Assert
-        // Assert
         composeTestRule
-            .onNodeWithText(recipe.title)
+            .onNodeWithText(recipe.title.uppercase())
             .assertIsDisplayed()
     }
 }
