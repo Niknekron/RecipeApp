@@ -55,7 +55,7 @@ fun RecipeItem(
             )
 
             Text(
-                text = recipe.title,
+                text = recipe.title.uppercase(),
                 modifier = Modifier.padding(Dimens.PaddingMedium),
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = 2,
