@@ -68,29 +68,41 @@ fun RecipesContent(
         }
 
         else -> {
-            LazyColumn(
-                modifier = modifier.fillMaxSize(),
-                contentPadding = PaddingValues(Dimens.PaddingMedium),
-                verticalArrangement = Arrangement.spacedBy(Dimens.PaddingMedium)
-            ) {
-                item {
-                    ScreenHeader(
-                        painter = rememberAsyncImagePainter(model = uiState.categoryImageUrl),
-                        contentDescription = uiState.categoryTitle,
-                        text = uiState.categoryTitle
+            if (uiState.recipes.isEmpty()) {
+                Box(
+                    modifier = modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Рецепты отсутствуют",
+                        modifier = Modifier.testTag("empty_state")
                     )
                 }
+            } else {
+                LazyColumn(
+                    modifier = modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(Dimens.PaddingMedium),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.PaddingMedium)
+                ) {
+                    item {
+                        ScreenHeader(
+                            painter = rememberAsyncImagePainter(model = uiState.categoryImageUrl),
+                            contentDescription = uiState.categoryTitle,
+                            text = uiState.categoryTitle
+                        )
+                    }
 
-                items(
-                    items = uiState.recipes,
-                    key = { it.id }
-                ) { recipe ->
-                    RecipeItem(
-                        recipe = recipe,
-                        onClick = { recipeId ->
-                            onRecipeClick(recipeId)
-                        }
-                    )
+                    items(
+                        items = uiState.recipes,
+                        key = { it.id }
+                    ) { recipe ->
+                        RecipeItem(
+                            recipe = recipe,
+                            onClick = { recipeId ->
+                                onRecipeClick(recipeId)
+                            }
+                        )
+                    }
                 }
             }
         }

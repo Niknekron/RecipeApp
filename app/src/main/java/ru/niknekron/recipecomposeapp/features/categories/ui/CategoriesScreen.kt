@@ -50,7 +50,9 @@ fun CategoriesContent(
                 modifier = modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator()
+                CircularProgressIndicator(
+                    modifier = Modifier.testTag("loading_indicator")
+                )
             }
         }
 
@@ -61,7 +63,9 @@ fun CategoriesContent(
             ) {
                 Text(
                     text = uiState.error.orEmpty(),
-                    style = MaterialTheme.typography.bodyMedium
+                    modifier = Modifier.testTag("error_message"),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error
                 )
             }
         }
