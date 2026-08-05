@@ -103,4 +103,8 @@ dependencies {
     androidTestImplementation(libs.mockwebserver)
     androidTestImplementation(libs.room.testing)
     androidTestImplementation(libs.hilt.android.testing)
+    implementation(libs.androidx.activity.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.compose.ui)
+    kspAndroidTest(libs.hilt.compiler)
 }
