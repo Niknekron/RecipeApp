@@ -1,6 +1,5 @@
 package ru.niknekron.recipecomposeapp.features.categories.ui
 
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,6 +20,7 @@ import ru.niknekron.recipecomposeapp.features.categories.presentation.model.Cate
 import ru.niknekron.recipecomposeapp.features.theme.Dimens
 import ru.niknekron.recipecomposeapp.features.categories.presentation.model.CategoriesUiState
 import androidx.compose.ui.platform.testTag
+import androidx.compose.foundation.layout.Column
 
 @Composable
 fun CategoriesScreen(
@@ -44,60 +44,63 @@ fun CategoriesContent(
     onCategoryClick: (Int, String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    when {
-        uiState.isLoading -> {
-            Box(
-                modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.testTag("loading_indicator")
-                )
-            }
-        }
-
-        uiState.error != null -> {
-            Box(
-                modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = uiState.error.orEmpty(),
-                    modifier = Modifier.testTag("error_message"),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-        }
-
-        else -> {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                modifier = modifier.fillMaxSize(),
-                contentPadding = PaddingValues(Dimens.PaddingMedium),
-                horizontalArrangement = Arrangement.spacedBy(
-                    Dimens.PaddingMedium
-                ),
-                verticalArrangement = Arrangement.spacedBy(
-                    Dimens.PaddingMedium
-                )
-            ) {
-                items(
-                    items = uiState.categories,
-                    key = { category ->
-                        category.id
-                    }
-                ) { category ->
-                    CategoryItem(
-                        category = category,
-                        onClick = {
-                            onCategoryClick(
-                                category.id,
-                                category.title,
-                                category.imageUrl
-                            )
-                        }
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .testTag("categories_screen")
+    ) {
+        when {
+            uiState.isLoading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.testTag("loading_indicator")
                     )
+                }
+            }
+
+            uiState.error != null -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = uiState.error.orEmpty(),
+                        modifier = Modifier.testTag("error_message"),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+
+            else -> {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(Dimens.PaddingMedium),
+                    horizontalArrangement = Arrangement.spacedBy(
+                        Dimens.PaddingMedium
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(
+                        Dimens.PaddingMedium
+                    )
+                ) {
+                    items(
+                        items = uiState.categories,
+                        key = { it.id }
+                    ) { category ->
+                        CategoryItem(
+                            category = category,
+                            onClick = {
+                                onCategoryClick(
+                                    category.id,
+                                    category.title,
+                                    category.imageUrl
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }
