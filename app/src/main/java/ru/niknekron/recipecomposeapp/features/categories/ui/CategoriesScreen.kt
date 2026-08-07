@@ -31,11 +31,16 @@ fun CategoriesScreen(
 
     val uiState by viewModel.uiState.collectAsState()
 
-    CategoriesContent(
-        uiState = uiState,
-        onCategoryClick = onCategoryClick,
+    Column(
         modifier = modifier
-    )
+            .fillMaxSize()
+            .testTag("categories_screen")
+    ) {
+        CategoriesContent(
+            uiState = uiState,
+            onCategoryClick = onCategoryClick
+        )
+    }
 }
 
 @Composable
@@ -44,63 +49,61 @@ fun CategoriesContent(
     onCategoryClick: (Int, String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .testTag("categories_screen")
-    ) {
-        when {
-            uiState.isLoading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.testTag("loading_indicator")
-                    )
-                }
+    when {
+        uiState.isLoading -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.testTag("loading_indicator")
+                )
             }
+        }
 
-            uiState.error != null -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = uiState.error.orEmpty(),
-                        modifier = Modifier.testTag("error_message"),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
+        uiState.error != null -> {
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = uiState.error.orEmpty(),
+                    modifier = Modifier.testTag("error_message"),
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
+        }
 
-            else -> {
-                LazyVerticalGrid(
-                    columns = GridCells.Fixed(2),
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(Dimens.PaddingMedium),
-                    horizontalArrangement = Arrangement.spacedBy(
-                        Dimens.PaddingMedium
-                    ),
-                    verticalArrangement = Arrangement.spacedBy(
-                        Dimens.PaddingMedium
-                    )
-                ) {
-                    items(
-                        items = uiState.categories,
-                        key = { it.id }
-                    ) { category ->
-                        CategoryItem(
-                            category = category,
-                            onClick = {
-                                onCategoryClick(
-                                    category.id,
-                                    category.title,
-                                    category.imageUrl
-                                )
-                            }
-                        )
+        else -> {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = modifier
+                    .fillMaxSize()
+                    .testTag("categories_grid"),
+                contentPadding = PaddingValues(Dimens.PaddingMedium),
+                horizontalArrangement = Arrangement.spacedBy(
+                    Dimens.PaddingMedium
+                ),
+                verticalArrangement = Arrangement.spacedBy(
+                    Dimens.PaddingMedium
+                )
+            ) {
+                items(
+                    items = uiState.categories,
+                    key = { category ->
+                        category.id
                     }
+                ) { category ->
+                    CategoryItem(
+                        category = category,
+                        onClick = {
+                            onCategoryClick(
+                                category.id,
+                                category.title,
+                                category.imageUrl
+                            )
+                        }
+                    )
                 }
             }
         }

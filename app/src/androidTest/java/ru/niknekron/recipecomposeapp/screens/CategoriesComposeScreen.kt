@@ -18,7 +18,7 @@ class CategoriesComposeScreen(
     }
 
     val categoriesGrid: KNode = child {
-        hasTestTag("categories_screen")
+        hasTestTag("categories_grid")
     }
 
     val categoryItem: KNode = child {
