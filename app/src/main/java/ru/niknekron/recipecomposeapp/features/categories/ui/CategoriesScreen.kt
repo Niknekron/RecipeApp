@@ -1,6 +1,5 @@
 package ru.niknekron.recipecomposeapp.features.categories.ui
 
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,6 +20,7 @@ import ru.niknekron.recipecomposeapp.features.categories.presentation.model.Cate
 import ru.niknekron.recipecomposeapp.features.theme.Dimens
 import ru.niknekron.recipecomposeapp.features.categories.presentation.model.CategoriesUiState
 import androidx.compose.ui.platform.testTag
+import androidx.compose.foundation.layout.Column
 
 @Composable
 fun CategoriesScreen(
@@ -31,11 +31,16 @@ fun CategoriesScreen(
 
     val uiState by viewModel.uiState.collectAsState()
 
-    CategoriesContent(
-        uiState = uiState,
-        onCategoryClick = onCategoryClick,
+    Column(
         modifier = modifier
-    )
+            .fillMaxSize()
+            .testTag("categories_screen")
+    ) {
+        CategoriesContent(
+            uiState = uiState,
+            onCategoryClick = onCategoryClick
+        )
+    }
 }
 
 @Composable
@@ -64,8 +69,7 @@ fun CategoriesContent(
                 Text(
                     text = uiState.error.orEmpty(),
                     modifier = Modifier.testTag("error_message"),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
         }
@@ -73,7 +77,9 @@ fun CategoriesContent(
         else -> {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                modifier = modifier.fillMaxSize(),
+                modifier = modifier
+                    .fillMaxSize()
+                    .testTag("categories_grid"),
                 contentPadding = PaddingValues(Dimens.PaddingMedium),
                 horizontalArrangement = Arrangement.spacedBy(
                     Dimens.PaddingMedium

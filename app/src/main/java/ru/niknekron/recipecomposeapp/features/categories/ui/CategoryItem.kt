@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import ru.niknekron.recipecomposeapp.features.categories.presentation.model.CategoryUiModel
 import ru.niknekron.recipecomposeapp.features.theme.Dimens
 import ru.niknekron.recipecomposeapp.core.ui.RecipeImage
+import androidx.compose.ui.platform.testTag
 
 
 @Composable
@@ -27,8 +28,10 @@ fun CategoryItem(
 ) {
     Card(
         onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(Dimens.CornerMedium),
+        modifier = modifier
+            .fillMaxWidth()
+            .testTag("category_item"),
+        shape = RoundedCornerShape(size = Dimens.CornerMedium),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),

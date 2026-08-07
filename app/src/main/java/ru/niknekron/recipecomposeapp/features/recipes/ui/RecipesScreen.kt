@@ -2,6 +2,7 @@ package ru.niknekron.recipecomposeapp.features.recipes.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,52 +42,61 @@ fun RecipesContent(
     onRecipeClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    when {
-        uiState.isLoading -> {
-            Box(
-                modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.testTag("loading_indicator")
-                )
-            }
-        }
-
-        uiState.error != null -> {
-            Box(
-                modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = uiState.error.orEmpty(),
-                    modifier = Modifier.testTag("error_message"),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error
-                )
-            }
-        }
-
-        else -> {
-            if (uiState.recipes.isEmpty()) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .testTag("recipes_screen")
+    ) {
+        when {
+            uiState.isLoading -> {
                 Box(
-                    modifier = modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.testTag("loading_indicator")
+                    )
+                }
+            }
+
+            uiState.error != null -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Рецепты отсутствуют",
-                        modifier = Modifier.testTag("empty_state")
+                        text = uiState.error.orEmpty(),
+                        modifier = Modifier.testTag("error_message"),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error
                     )
                 }
-            } else {
+            }
+
+            uiState.recipes.isEmpty() -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .testTag("empty_state"),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Рецепты отсутствуют")
+                }
+            }
+
+            else -> {
                 LazyColumn(
-                    modifier = modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     contentPadding = PaddingValues(Dimens.PaddingMedium),
-                    verticalArrangement = Arrangement.spacedBy(Dimens.PaddingMedium)
+                    verticalArrangement = Arrangement.spacedBy(
+                        Dimens.PaddingMedium
+                    )
                 ) {
                     item {
                         ScreenHeader(
-                            painter = rememberAsyncImagePainter(model = uiState.categoryImageUrl),
+                            painter = rememberAsyncImagePainter(
+                                model = uiState.categoryImageUrl
+                            ),
                             contentDescription = uiState.categoryTitle,
                             text = uiState.categoryTitle
                         )
@@ -98,9 +108,7 @@ fun RecipesContent(
                     ) { recipe ->
                         RecipeItem(
                             recipe = recipe,
-                            onClick = { recipeId ->
-                                onRecipeClick(recipeId)
-                            }
+                            onClick = onRecipeClick
                         )
                     }
                 }
