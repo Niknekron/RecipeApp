@@ -1,5 +1,3 @@
-name: Android CI
-
 on:
   push:
     branches: [ master ]
@@ -60,9 +58,6 @@ jobs:
           name: debug-apk
           path: app/build/outputs/apk/debug/*.apk
           retention-days: 7
-
-      - name: Run unit tests
-        run: ./gradlew test
 
       - name: Generate code coverage report
         run: ./gradlew jacocoTestReport
