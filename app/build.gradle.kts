@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.ksp)
     id("kotlin-parcelize")
     alias(libs.plugins.hilt)
+    id("jacoco")
 }
 
 android {
@@ -50,6 +51,44 @@ android {
         unitTests {
             isReturnDefaultValues = true
         }
+    }
+
+    tasks.register<JacocoReport>("jacocoTestReport") {
+        dependsOn("testDebugUnitTest")
+
+        reports {
+            xml.required.set(true)
+            html.required.set(true)
+        }
+
+        val fileFilter = listOf(
+            "**/R.class",
+            "**/R$*.class",
+            "**/BuildConfig.*",
+            "**/Manifest*.*"
+        )
+
+        val debugTree = fileTree(
+            "${layout.buildDirectory.get()}/tmp/kotlin-classes/debug"
+        ) {
+            exclude(fileFilter)
+        }
+
+        sourceDirectories.setFrom(
+            files("$projectDir/src/main/java")
+        )
+
+        classDirectories.setFrom(
+            files(debugTree)
+        )
+
+        executionData.setFrom(
+            fileTree(layout.buildDirectory) {
+                include(
+                    "jacoco/testDebugUnitTest.exec"
+                )
+            }
+        )
     }
 }
 

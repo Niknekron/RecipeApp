@@ -1,0 +1,1 @@
+![Android CI](https://github.com/Niknekron/RecipeApp/actions/workflows/ci.yml/badge.svg)
