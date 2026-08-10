@@ -1,6 +1,5 @@
 package ru.niknekron.recipecomposeapp.features.recipes.presentation
 
-import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,6 +16,8 @@ import ru.niknekron.recipecomposeapp.features.recipes.presentation.model.toUiMod
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 @HiltViewModel
 class RecipesViewModel @Inject constructor(
@@ -28,13 +29,15 @@ class RecipesViewModel @Inject constructor(
         savedStateHandle[PARAM_CATEGORY_ID] ?: 0
 
     private val categoryTitle: String =
-        Uri.decode(
-            savedStateHandle[PARAM_CATEGORY_TITLE] ?: ""
+        URLDecoder.decode(
+            savedStateHandle[PARAM_CATEGORY_TITLE] ?: "",
+            StandardCharsets.UTF_8.toString()
         )
 
     private val categoryImageUrl: String =
-        Uri.decode(
-            savedStateHandle[PARAM_CATEGORY_IMAGE_URL] ?: ""
+        URLDecoder.decode(
+            savedStateHandle[PARAM_CATEGORY_IMAGE_URL] ?: "",
+            StandardCharsets.UTF_8.toString()
         )
 
     private val _uiState = MutableStateFlow(

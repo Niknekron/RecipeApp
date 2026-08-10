@@ -21,6 +21,9 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import ru.niknekron.recipecomposeapp.PARAM_CATEGORY_ID
+import ru.niknekron.recipecomposeapp.PARAM_CATEGORY_IMAGE_URL
+import ru.niknekron.recipecomposeapp.PARAM_CATEGORY_TITLE
 import ru.niknekron.recipecomposeapp.data.repository.RecipesRepository
 import ru.niknekron.recipecomposeapp.fixtures.RecipeTestFixtures
 
@@ -47,9 +50,9 @@ class RecipesViewModelTest {
     ): RecipesViewModel {
         val savedStateHandle = SavedStateHandle(
             mapOf(
-                "categoryId" to categoryId,
-                "categoryTitle" to categoryTitle,
-                "categoryImageUrl" to categoryImageUrl
+                PARAM_CATEGORY_ID to categoryId,
+                PARAM_CATEGORY_TITLE to categoryTitle,
+                PARAM_CATEGORY_IMAGE_URL to categoryImageUrl
             )
         )
 
